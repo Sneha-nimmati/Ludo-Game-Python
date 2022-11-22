@@ -547,6 +547,7 @@ class Ludo:
         robo_operator = None
         if color_indicator == "red":
             temp_coin_position = self.red_coin_position
+        else:
             temp_coin_position = self.sky_blue_coin_position
 
         all_in = 1
@@ -667,7 +668,8 @@ class Ludo:
 
         Label(self.make_canvas, text="Player 1", bg="#141414", fg="gold", font=("Arial", 15, "bold")).place(x=15,
                                                                                                             y=15 + 140 + 50)
-
+        self.store_instructional_btn(block_predict_red, predict_red, [btn_1, btn_2, btn_3, btn_4])
+    
     def instruction_btn_sky_blue(self):
         block_predict_sky_blue = Label(self.make_canvas, image=self.block_number_side[0])
         block_predict_sky_blue.place(x=34, y=15 + (40 * 6 + 40 * 3) + 10)
@@ -1257,22 +1259,10 @@ class Ludo:
                     messagebox.showinfo("Winner", "Hurrah! I am the winner")
                 else:
                     messagebox.showinfo("Winner","Congrats! You are the winner")
-            elif self.take_permission == 2:
-                if self.robo_prem == 1 and color_coin == "red":
-                    messagebox.showinfo("Winner", "Hurrah! I am 1st runner")
-                else:
-                    messagebox.showinfo("Winner", "Wow! You are 1st runner")
-            elif self.take_permission == 3:
-                if self.robo_prem == 1 and color_coin == "red":
-                    messagebox.showinfo("Result", "I am 2nd runner....Not bad at all")
-                else:
-                    messagebox.showinfo("Result", "You are 2nd runner....Better Luck next time")
-
             self.block_value_predict[temp_delete][1]['state'] = DISABLED
             self.total_people_play.remove(temp_delete)
 
             if len(self.total_people_play) == 1:
-                messagebox.showinfo("Game Over","Good bye!!!!")
                 self.block_value_predict[0][1]['state'] = DISABLED
                 return False
             else:
