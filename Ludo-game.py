@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk
 import time
+import pygame
 from random import randint, choice
 
 
@@ -407,6 +408,7 @@ class Ludo:
     def take_initial_control(self):
         for i in range(2):
             self.block_value_predict[i][1]['state'] = DISABLED
+            print(self.block_value_predict)
 
        
         top = Toplevel()
@@ -434,7 +436,7 @@ class Ludo:
                     place_ins.place(x=250, y=260)
 
                     if time_is > 5:
-                        command_play['text'] = f"             Machine Play With Red and You Play With Sky Blue"
+                        command_play['text'] = f"         Machine Play With Red and You Play With Sky Blue"
                     elif time_is >= 2 and time_is < 5:
                         command_play['text'] = f"                       You Will Get the First Chance to play"
                     else:
@@ -458,52 +460,87 @@ class Ludo:
 
         mvc_btn = Button(top, text="Play With Computer", bg="#2B4AF7", fg="#FCFCFD", font=("Times New Roman", 16, "bold"),
                          relief=RAISED, bd=3, command=lambda: operate(1), activebackground="#2B4AF7")
-        mvc_btn.place(x=300, y=200
+        mvc_btn.place(x=300, y=200)
+
+        pygame.mixer.init()
+
+        pygame.mixer.music.load('sound/sound.mp3')
+        global is_on
+        pygame.mixer.music.play(loops=0)
+        is_on = True
+
+        # my_label = Label(top,
+        #                  text="Ludo The Game",
+        #                  fg="#f8c294",
+        #                  font=("Helvetica", 32))
+        #
+        # my_label.pack(pady=20)
+
+        def switch():
+            global is_on
+            # Determine is on or off
+            if is_on:
+                on_button.config(image=off)
+                pygame.mixer.music.stop()
+                # my_label.config(text="The Switch is Off", fg="grey")
+                is_on = False
+            else:
+                on_button.config(image=on)
+                # my_label.config(text="The Switch is On", fg="green")
+                pygame.mixer.music.play(loops=0)
+                is_on = True
+
+        on = PhotoImage(file="sound/son.png")
+        off = PhotoImage(file="sound/soff.png")
+
+        label1 = Label(top, text="Sound:", font=("Arial", 30, "bold"))
+        label1.place(x=190, y=120)
+        on_button = Button(top, image=on, bd=0, command=switch)
+        on_button.place(x=308, y=120)
 
         top.mainloop()
 
-
         def make_prediction(self, color_indicator):
-        try:
-            if color_indicator == "red":
-                block_value_predict = self.block_value_predict[0]
-                if self.robo_prem and self.count_robo_stage_from_start < 3:
-                    self.count_robo_stage_from_start += 1
-                if self.robo_prem and self.count_robo_stage_from_start == 3 and self.six_counter < 2:
-                    permanent_block_number = self.move_red_counter = 6
-                    self.count_robo_stage_from_start += 1
-                else:
-                    permanent_block_number = self.move_red_counter = randint(1, 6)
+            try:
+                if color_indicator == "red":
+                    block_value_predict = self.block_value_predict[0]
+                    if self.robo_prem and self.count_robo_stage_from_start < 3:
+                        self.count_robo_stage_from_start += 1
+                    if self.robo_prem and self.count_robo_stage_from_start == 3 and self.six_counter < 2:
+                        permanent_block_number = self.move_red_counter = 6
+                        self.count_robo_stage_from_start += 1
+                    else:
+                        permanent_block_number = self.move_red_counter = randint(1, 6)
 
-            elif color_indicator == "sky_blue":
-                block_value_predict = self.block_value_predict[1]
-                permanent_block_number = self.move_sky_blue_counter = randint(1, 6)
-                if self.robo_prem and permanent_block_number == 6:
-                    for coin_loc in self.red_coin_position:
-                        if 40 <= coin_loc <= 46:
-                            permanent_block_number = self.move_sky_blue_counter = randint(1, 5)
-                            break
+                elif color_indicator == "sky_blue":
+                    block_value_predict = self.block_value_predict[1]
+                    permanent_block_number = self.move_sky_blue_counter = randint(1, 6)
+                    if self.robo_prem and permanent_block_number == 6:
+                        for coin_loc in self.red_coin_position:
+                            if 40 <= coin_loc <= 46:
+                                permanent_block_number = self.move_sky_blue_counter = randint(1, 5)
+                                break
 
 
-            temp_counter = 12
-            while temp_counter > 0:
-                move_temp_counter = randint(1, 6)
-                block_value_predict[0]['image'] = self.block_number_side[move_temp_counter - 1]
-                self.window.update()
-                time.sleep(0.1)
-                temp_counter -= 1
+                temp_counter = 12
+                while temp_counter > 0:
+                    move_temp_counter = randint(1, 6)
+                    block_value_predict[0]['image'] = self.block_number_side[move_temp_counter - 1]
+                    self.window.update()
+                    time.sleep(0.1)
+                    temp_counter -= 1
 
-             print("Prediction result: ", permanent_block_number)
+                print("Prediction result: ", permanent_block_number)
 
-            # Permanent predicted value containing image set
-            block_value_predict[0]['image'] = self.block_number_side[permanent_block_number - 1]
-            if self.robo_prem == 1 and color_indicator == "red":
-                self.window.update()
-                time.sleep(0.4)
-            self.instructional_btn_customization_based_on_current_situation(color_indicator, permanent_block_number,
+
+                block_value_predict[0]['image'] = self.block_number_side[permanent_block_number - 1]
+                if self.robo_prem == 1 and color_indicator == "red":
+                    self.window.update()
+                    time.sleep(0.4)
+                    self.instructional_btn_customization_based_on_current_situation(color_indicator, permanent_block_number,
                                                                             block_value_predict)
-        except:
-            print("Force Stop Error in Prediction")
+            except:
+                print("Force Stop Error in Prediction")
 
     def instructional_btn_customization_based_on_current_situation(self, color_indicator, permanent_block_number,
                                                                    block_value_predict):
@@ -667,7 +704,7 @@ class Ludo:
         temp.append(entry_controller)
         self.block_value_predict.append(temp)
     
-     def red_circle_start_position(self, coin_number):
+    def red_circle_start_position(self, coin_number):
         self.make_canvas.delete(self.made_red_coin[int(coin_number) - 1])
         self.made_red_coin[int(coin_number) - 1] = self.make_canvas.create_oval(100 + 40, 15 + (40 * 6), 100 + 40 + 40,
                                                                                 15 + (40 * 6) + 40, fill="red", width=3,
@@ -729,7 +766,7 @@ class Ludo:
         self.window.update()
         time.sleep(0.2)
 
-     def num_btns_state_controller(self, take_nums_btns_list, state_control=1):
+    def num_btns_state_controller(self, take_nums_btns_list, state_control=1):
         if state_control:
             for num_btn in take_nums_btns_list:
                 num_btn['state'] = NORMAL
@@ -854,8 +891,594 @@ class Ludo:
         if permission_granted_to_proceed:  
             self.make_command(robo_operator)
 
+    def motion_of_coin(self, counter_coin, specific_coin, number_label, number_label_x, number_label_y, color_coin,
+                       path_counter):
+        try:
+            number_label.place(x=number_label_x, y=number_label_y)
+            while True:
+                if path_counter == 0:
+                    break
+                elif (counter_coin == 51 and color_coin == "red") or (counter_coin == 12 and color_coin == "green") or (
+                        counter_coin == 25 and color_coin == "yellow") or (
+                        counter_coin == 38 and color_coin == "sky_blue") or counter_coin >= 100:
+                    if counter_coin < 100:
+                        counter_coin = 100
+
+                    counter_coin = self.under_room_traversal_control(specific_coin, number_label, number_label_x,
+                                                                     number_label_y, path_counter, counter_coin,
+                                                                     color_coin)
+
+                    if counter_coin == 106:
+
+                        if self.robo_prem == 1 and color_coin == "red":
+                            messagebox.showinfo("Destination reached", "Hey! I am at the destination")
+                        else:
+                            messagebox.showinfo("Destination reached", "Congrats! You now at the destination")
+                        if path_counter == 6:
+                            self.six_with_overlap = 1
+                        else:
+                            self.time_for -= 1
+                    break
+
+                counter_coin += 1
+                path_counter -= 1
+                number_label.place_forget()
+
+                print(counter_coin)
+
+                if counter_coin <= 5:
+                    self.make_canvas.move(specific_coin, 40, 0)
+                    number_label_x += 40
+                elif counter_coin == 6:
+                    self.make_canvas.move(specific_coin, 40, -40)
+                    number_label_x += 40
+                    number_label_y -= 40
+                elif 6 < counter_coin <= 11:
+                    self.make_canvas.move(specific_coin, 0, -40)
+                    number_label_y -= 40
+                elif counter_coin <= 13:
+                    self.make_canvas.move(specific_coin, 40, 0)
+                    number_label_x += 40
+                elif counter_coin <= 18:
+                    self.make_canvas.move(specific_coin, 0, 40)
+                    number_label_y += 40
+                elif counter_coin == 19:
+                    self.make_canvas.move(specific_coin, 40, 40)
+                    number_label_x += 40
+                    number_label_y += 40
+                elif counter_coin <= 24:
+                    self.make_canvas.move(specific_coin, 40, 0)
+                    number_label_x += 40
+                elif counter_coin <= 26:
+                    self.make_canvas.move(specific_coin, 0, 40)
+                    number_label_y += 40
+                elif counter_coin <= 31:
+                    self.make_canvas.move(specific_coin, -40, 0)
+                    number_label_x -= 40
+                elif counter_coin == 32:
+                    self.make_canvas.move(specific_coin, -40, 40)
+                    number_label_x -= 40
+                    number_label_y += 40
+                elif counter_coin <= 37:
+                    self.make_canvas.move(specific_coin, 0, 40)
+                    number_label_y += 40
+                elif counter_coin <= 39:
+                    self.make_canvas.move(specific_coin, -40, 0)
+                    number_label_x -= 40
+                elif counter_coin <= 44:
+                    self.make_canvas.move(specific_coin, 0, -40)
+                    number_label_y -= 40
+                elif counter_coin == 45:
+                    self.make_canvas.move(specific_coin, -40, -40)
+                    number_label_x -= 40
+                    number_label_y -= 40
+                elif counter_coin <= 50:
+                    self.make_canvas.move(specific_coin, -40, 0)
+                    number_label_x -= 40
+                elif 50 < counter_coin <= 52:
+                    self.make_canvas.move(specific_coin, 0, -40)
+                    number_label_y -= 40
+                elif counter_coin == 53:
+                    self.make_canvas.move(specific_coin, 40, 0)
+                    number_label_x += 40
+                    counter_coin = 1
+
+                number_label.place_forget()
+                number_label.place(x=number_label_x, y=number_label_y)
+
+                self.window.update()
+                time.sleep(0.2)
+
+            return counter_coin
+        except:
+            print("Force Stop Error Came in motion of coin")
+
+    def coord_overlap(self, counter_coin, color_coin, path_to_traverse_before_overlap):
+        if color_coin != "red":
+            for take_coin_number in range(len(self.red_coord_store)):
+                if self.red_coord_store[take_coin_number] == counter_coin:
+                    if path_to_traverse_before_overlap == 6:
+                        self.six_with_overlap = 1
+                    else:
+                        self.time_for -= 1
+
+                    self.make_canvas.delete(self.made_red_coin[take_coin_number])
+                    self.red_number_label[take_coin_number].place_forget()
+                    self.red_coin_position[take_coin_number] = -1
+                    self.red_coord_store[take_coin_number] = -1
+                    if self.robo_prem == 1:
+                        self.robo_store.remove(take_coin_number + 1)
+                        if self.red_coin_position.count(-1) >= 1:
+                            self.count_robo_stage_from_start = 2
+
+                    if take_coin_number == 0:
+                        remade_coin = self.make_canvas.create_oval(100 + 40, 15 + 40, 100 + 40 + 40, 15 + 40 + 40,
+                                                                   width=3, fill="red", outline="black")
+                        self.red_number_label[take_coin_number].place(x=100 + 40 + 10, y=15 + 40 + 5)
+                    elif take_coin_number == 1:
+                        remade_coin = self.make_canvas.create_oval(100 + 40 + 60 + 60, 15 + 40, 100 + 40 + 60 + 60 + 40,
+                                                                   15 + 40 + 40, width=3, fill="red", outline="black")
+                        self.red_number_label[take_coin_number].place(x=100 + 40 + 60 + 60 + 10, y=15 + 40 + 5)
+                    elif take_coin_number == 2:
+                        remade_coin = self.make_canvas.create_oval(100 + 40 + 60 + 60, 15 + 40 + 100,
+                                                                   100 + 40 + 60 + 60 + 40, 15 + 40 + 40 + 100, width=3,
+                                                                   fill="red", outline="black")
+                        self.red_number_label[take_coin_number].place(x=100 + 40 + 60 + 60 + 10, y=15 + 40 + 100 + 5)
+                    else:
+                        remade_coin = self.make_canvas.create_oval(100 + 40, 15 + 40 + 100, 100 + 40 + 40,
+                                                                   15 + 40 + 40 + 100, width=3, fill="red",
+                                                                   outline="black")
+                        self.red_number_label[take_coin_number].place(x=100 + 40 + 10, y=15 + 40 + 100 + 5)
+
+                    self.made_red_coin[take_coin_number] = remade_coin
+
+        if color_coin != "green":
+            for take_coin_number in range(len(self.green_coord_store)):
+                if self.green_coord_store[take_coin_number] == counter_coin:
+                    if path_to_traverse_before_overlap == 6:
+                        self.six_with_overlap = 1
+                    else:
+                        self.time_for -= 1
+
+                    self.make_canvas.delete(self.made_green_coin[take_coin_number])
+                    self.green_number_label[take_coin_number].place_forget()
+                    self.green_coin_position[take_coin_number] = -1
+                    self.green_coord_store[take_coin_number] = -1
+
+                    if take_coin_number == 0:
+                        remade_coin = self.make_canvas.create_oval(340 + (40 * 3) + 40, 15 + 40,
+                                                                   340 + (40 * 3) + 40 + 40, 15 + 40 + 40, width=3,
+                                                                   fill="#00FF00", outline="black")
+                        self.green_number_label[take_coin_number].place(x=340 + (40 * 3) + 40 + 10, y=15 + 40 + 5)
+                    elif take_coin_number == 1:
+                        remade_coin = self.make_canvas.create_oval(340 + (40 * 3) + 40 + 60 + 40 + 20, 15 + 40,
+                                                                   340 + (40 * 3) + 40 + 60 + 40 + 40 + 20,
+                                                                   15 + 40 + 40, width=3, fill="#00FF00",
+                                                                   outline="black")
+                        self.green_number_label[take_coin_number].place(x=340 + (40 * 3) + 40 + 40 + 60 + 30,
+                                                                        y=15 + 40 + 5)
+                    elif take_coin_number == 2:
+                        remade_coin = self.make_canvas.create_oval(340 + (40 * 3) + 40 + 60 + 40 + 20, 15 + 40 + 100,
+                                                                   340 + (40 * 3) + 40 + 60 + 40 + 40 + 20,
+                                                                   15 + 40 + 40 + 100, width=3, fill="#00FF00",
+                                                                   outline="black")
+                        self.green_number_label[take_coin_number].place(x=340 + (40 * 3) + 40 + 40 + 60 + 30,
+                                                                        y=15 + 40 + 100 + 5)
+                    else:
+                        remade_coin = self.make_canvas.create_oval(340 + (40 * 3) + 40, 15 + 40 + 100,
+                                                                   340 + (40 * 3) + 40 + 40, 15 + 40 + 40 + 100,
+                                                                   width=3, fill="#00FF00", outline="black")
+                        self.green_number_label[take_coin_number].place(x=340 + (40 * 3) + 40 + 10, y=15 + 40 + 100 + 5)
+
+                    self.made_green_coin[take_coin_number] = remade_coin
+
+        if color_coin != "yellow":
+            for take_coin_number in range(len(self.yellow_coord_store)):
+                if self.yellow_coord_store[take_coin_number] == counter_coin:
+                    if path_to_traverse_before_overlap == 6:
+                        self.six_with_overlap = 1
+                    else:
+                        self.time_for -= 1
+
+                    self.make_canvas.delete(self.made_yellow_coin[take_coin_number])
+                    self.yellow_number_label[take_coin_number].place_forget()
+                    self.yellow_coin_position[take_coin_number] = -1
+                    self.yellow_coord_store[take_coin_number] = -1
+
+                    if take_coin_number == 0:
+                        remade_coin = self.make_canvas.create_oval(340 + (40 * 3) + 40, 340 + 80 + 15,
+                                                                   340 + (40 * 3) + 40 + 40, 340 + 80 + 40 + 15,
+                                                                   width=3, fill="yellow", outline="black")
+                        self.yellow_number_label[take_coin_number].place(x=340 + (40 * 3) + 40 + 10,
+                                                                         y=30 + (40 * 6) + (40 * 3) + 40 + 10)
+                    elif take_coin_number == 1:
+                        remade_coin = self.make_canvas.create_oval(340 + (40 * 3) + 40 + 60 + 40 + 20, 340 + 80 + 15,
+                                                                   340 + (40 * 3) + 40 + 60 + 40 + 40 + 20,
+                                                                   340 + 80 + 40 + 15, width=3, fill="yellow",
+                                                                   outline="black")
+                        self.yellow_number_label[take_coin_number].place(x=340 + (40 * 3) + 40 + 40 + 60 + 30,
+                                                                         y=30 + (40 * 6) + (40 * 3) + 40 + 10)
+                    elif take_coin_number == 2:
+                        remade_coin = self.make_canvas.create_oval(340 + (40 * 3) + 40 + 60 + 40 + 20,
+                                                                   340 + 80 + 60 + 40 + 15,
+                                                                   340 + (40 * 3) + 40 + 60 + 40 + 40 + 20,
+                                                                   340 + 80 + 60 + 40 + 40 + 15, width=3, fill="yellow",
+                                                                   outline="black")
+                        self.yellow_number_label[take_coin_number].place(x=340 + (40 * 3) + 40 + 40 + 60 + 30,
+                                                                         y=30 + (40 * 6) + (40 * 3) + 40 + 100 + 10)
+                    else:
+                        remade_coin = self.make_canvas.create_oval(340 + (40 * 3) + 40, 340 + 80 + 60 + 40 + 15,
+                                                                   340 + (40 * 3) + 40 + 40,
+                                                                   340 + 80 + 60 + 40 + 40 + 15, width=3, fill="yellow",
+                                                                   outline="black")
+                        self.yellow_number_label[take_coin_number].place(x=340 + (40 * 3) + 40 + 10,
+                                                                         y=30 + (40 * 6) + (40 * 3) + 40 + 100 + 10)
+
+                    self.made_yellow_coin[take_coin_number] = remade_coin
+
+        if color_coin != "sky_blue":
+            for take_coin_number in range(len(self.sky_blue_coord_store)):
+                if self.sky_blue_coord_store[take_coin_number] == counter_coin:
+                    if path_to_traverse_before_overlap == 6:
+                        self.six_with_overlap = 1
+                    else:
+                        self.time_for -= 1
+
+                    self.make_canvas.delete(self.made_sky_blue_coin[take_coin_number])
+                    self.sky_blue_number_label[take_coin_number].place_forget()
+                    self.sky_blue_coin_position[take_coin_number] = -1
+                    self.sky_blue_coord_store[take_coin_number] = -1
+
+                    if take_coin_number == 0:
+                        remade_coin = self.make_canvas.create_oval(100 + 40, 340 + 80 + 15, 100 + 40 + 40,
+                                                                   340 + 80 + 40 + 15, width=3, fill="#04d9ff",
+                                                                   outline="black")
+                        self.sky_blue_number_label[take_coin_number].place(x=100 + 40 + 10,
+                                                                           y=30 + (40 * 6) + (40 * 3) + 40 + 10)
+                    elif take_coin_number == 1:
+                        remade_coin = self.make_canvas.create_oval(100 + 40 + 60 + 40 + 20, 340 + 80 + 15,
+                                                                   100 + 40 + 60 + 40 + 40 + 20, 340 + 80 + 40 + 15,
+                                                                   width=3, fill="#04d9ff", outline="black")
+                        self.sky_blue_number_label[take_coin_number].place(x=100 + 40 + 60 + 60 + 10,
+                                                                           y=30 + (40 * 6) + (40 * 3) + 40 + 10)
+                    elif take_coin_number == 2:
+                        remade_coin = self.make_canvas.create_oval(100 + 40 + 60 + 40 + 20, 340 + 80 + 60 + 40 + 15,
+                                                                   100 + 40 + 60 + 40 + 40 + 20,
+                                                                   340 + 80 + 60 + 40 + 40 + 15, width=3,
+                                                                   fill="#04d9ff", outline="black")
+                        self.sky_blue_number_label[take_coin_number].place(x=100 + 40 + 60 + 60 + 10,
+                                                                           y=30 + (40 * 6) + (
+                                                                                       40 * 3) + 40 + 60 + 40 + 10)
+                    else:
+                        remade_coin = self.make_canvas.create_oval(100 + 40, 340 + 80 + 60 + 40 + 15, 100 + 40 + 40,
+                                                                   340 + 80 + 60 + 40 + 40 + 15, width=3,
+                                                                   fill="#04d9ff", outline="black")
+                        self.sky_blue_number_label[take_coin_number].place(x=100 + 40 + 10, y=30 + (40 * 6) + (
+                                    40 * 3) + 40 + 60 + 40 + 10)
+
+                    self.made_sky_blue_coin[take_coin_number] = remade_coin
+
+    def under_room_traversal_control(self, specific_coin, number_label, number_label_x, number_label_y, path_counter,
+                                     counter_coin, color_coin):
+        if color_coin == "red" and counter_coin >= 100:
+            if int(counter_coin) + int(path_counter) <= 106:
+                counter_coin = self.room_red_traversal(specific_coin, number_label, number_label_x, number_label_y,
+                                                       path_counter, counter_coin)
+
+        elif color_coin == "green" and counter_coin >= 100:
+            if int(counter_coin) + int(path_counter) <= 106:
+                counter_coin = self.room_green_traversal(specific_coin, number_label, number_label_x, number_label_y,
+                                                         path_counter, counter_coin)
+
+        elif color_coin == "yellow" and counter_coin >= 100:
+            if int(counter_coin) + int(path_counter) <= 106:
+                counter_coin = self.room_yellow_traversal(specific_coin, number_label, number_label_x, number_label_y,
+                                                          path_counter, counter_coin)
+
+        elif color_coin == "sky_blue" and counter_coin >= 100:
+            if int(counter_coin) + int(path_counter) <= 106:
+                counter_coin = self.room_sky_blue_traversal(specific_coin, number_label, number_label_x, number_label_y,
+                                                            path_counter, counter_coin)
+
+        return counter_coin
+
+    def room_red_traversal(self, specific_coin, number_label, number_label_x, number_label_y, path_counter, counter_coin):
+        while path_counter>0:
+            counter_coin += 1
+            path_counter -= 1
+            self.make_canvas.move(specific_coin, 40, 0)
+            number_label_x+=40
+            number_label.place(x=number_label_x,y=number_label_y)
+            self.window.update()
+            time.sleep(0.2)
+        return counter_coin
+
+    def room_green_traversal(self, specific_coin, number_label, number_label_x, number_label_y, path_counter, counter_coin):
+        while path_counter > 0:
+            counter_coin += 1
+            path_counter -= 1
+            self.make_canvas.move(specific_coin, 0, 40)
+            number_label_y += 40
+            number_label.place(x=number_label_x, y=number_label_y)
+            self.window.update()
+            time.sleep(0.2)
+        return counter_coin
+
+    def room_yellow_traversal(self, specific_coin, number_label, number_label_x, number_label_y, path_counter,
+                              counter_coin):
+        while path_counter > 0:
+            counter_coin += 1
+            path_counter -= 1
+            self.make_canvas.move(specific_coin, -40, 0)
+            number_label_x -= 40
+            number_label.place(x=number_label_x, y=number_label_y)
+            self.window.update()
+            time.sleep(0.2)
+        return counter_coin
+
+    def room_sky_blue_traversal(self, specific_coin, number_label, number_label_x, number_label_y, path_counter,
+                                counter_coin):
+        while path_counter > 0:
+            counter_coin += 1
+            path_counter -= 1
+            self.make_canvas.move(specific_coin, 0, -40)
+            number_label_y -= 40
+            number_label.place(x=number_label_x, y=number_label_y)
+            self.window.update()
+            time.sleep(0.2)
+        return counter_coin
+
+    def check_winner_and_runner(self,color_coin):
+        destination_reached = 0 # Check for all specific color coins
+        if color_coin == "red":
+            temp_store = self.red_coord_store
+            temp_delete = 0# Player index
+        elif color_coin == "green":
+            temp_store = self.green_coord_store
+            temp_delete = 3# Player index
+        elif color_coin == "yellow":
+            temp_store = self.yellow_coord_store
+            temp_delete = 2# Player index
+        else:
+            temp_store = self.sky_blue_coord_store
+            temp_delete = 1# Player index
+
+        for take in temp_store:
+            if take == 106:
+                destination_reached = 1
+            else:
+                destination_reached = 0
+                break
+
+        if  destination_reached == 1:
+            self.take_permission += 1
+            if self.take_permission == 1:
+                if self.robo_prem == 1 and color_coin == "red":
+                    messagebox.showinfo("Winner", "Hurrah! I am the winner")
+                else:
+                    messagebox.showinfo("Winner","Congrats! You are the winner")
+            elif self.take_permission == 2:
+                if self.robo_prem == 1 and color_coin == "red":
+                    messagebox.showinfo("Winner", "Hurrah! I am 1st runner")
+                else:
+                    messagebox.showinfo("Winner", "Wow! You are 1st runner")
+            elif self.take_permission == 3:
+                if self.robo_prem == 1 and color_coin == "red":
+                    messagebox.showinfo("Result", "I am 2nd runner....Not bad at all")
+                else:
+                    messagebox.showinfo("Result", "You are 2nd runner....Better Luck next time")
+
+            self.block_value_predict[temp_delete][1]['state'] = DISABLED
+            self.total_people_play.remove(temp_delete)
+
+            if len(self.total_people_play) == 1:
+                messagebox.showinfo("Game Over","Good bye!!!!")
+                self.block_value_predict[0][1]['state'] = DISABLED
+                return False
+            else:
+                self.time_for-=1
+        else:
+            print("Winner not decided")
+
+        return True
+
+    def robo_judge(self, ind="give"):
+        if ind == "give":
+            all_in = 1
+            for i in range(4):
+                if self.red_coin_position[i] == -1:
+                    all_in = 1
+                else:
+                    all_in = 0
+                    break
+
+            if all_in == 1:
+                if self.move_red_counter == 6:
+                    predicted_coin = choice([1, 2, 3, 4])
+                    self.robo_store.append(predicted_coin)
+                    self.main_controller("red", predicted_coin)
+                else:
+                    pass
+            else:
+                temp = self.red_coin_position
+                take_ref = self.sky_blue_coin_position
+
+                if len(self.robo_store) == 1:
+                    if self.move_red_counter < 6:
+                        if (self.count_robo_stage_from_start > 3) and (
+                                temp[self.robo_store[0] - 1] >= 33 and temp[self.robo_store[0] - 1] <= 38):
+                            self.count_robo_stage_from_start = 2
+                        self.main_controller("red", self.robo_store[0])
+                    else:
+                        forward_perm = 0
+                        for coin in take_ref:
+                            if coin > -1 and coin < 101:
+                                if (
+                                        coin != 40 or coin != 35 or coin != 27 or coin != 22 or coin != 14 or coin != 9 or coin != 1 or coin != 48) and coin - \
+                                        temp[self.robo_store[0] - 1] >= 6 and coin - temp[self.robo_store[0] - 1] <= 12:
+                                    forward_perm = 1
+                                    break
+                                else:
+                                    forward_perm = 0
+                            else:
+                                forward_perm = 0
+
+                        if forward_perm == 0:
+                            store = [1, 2, 3, 4]
+                            store.remove(self.robo_store[0])
+                            predicted_coin = choice(store)
+                            self.robo_store.append(predicted_coin)
+                            self.main_controller("red", predicted_coin)
+                        else:
+                            self.main_controller("red", self.robo_store[0])
+                else:
+                    def normal_movement_according_condition():
+
+                        normal_movement = 1
+
+                        for coin in self.robo_store:
+                            if temp[
+                                coin - 1] + self.move_red_counter <= 106:
+                                pass
+                            else:
+                                normal_movement = 0
+                                break
+
+                        if normal_movement:
+                            temp_robo_store = [coin for coin in self.robo_store]
+                        else:
+                            temp_robo_store = [coin for coin in self.robo_store if
+                                               temp[coin - 1] + self.move_red_counter <= 106]
 
 
+                        for coin in temp_robo_store:
+                            if len(temp_robo_store) > 1 and temp[
+                                coin - 1] < 101:
+                                if (temp[coin - 1] in take_ref) and (
+                                        temp[coin - 1] != 1 or temp[coin - 1] != 9 or temp[coin - 1] != 14 or temp[
+                                    coin - 1] != 22 or temp[coin - 1] != 27 or temp[coin - 1] != 35 or temp[
+                                            coin - 1] != 40 or temp[coin - 1] != 48):
+                                    temp_robo_store.remove(coin)
+                                elif temp[coin - 1] <= 39 and temp[coin - 1] + self.move_red_counter > 39:
+                                    for loc_coin_other in take_ref:
+                                        if (loc_coin_other >= 40 and loc_coin_other <= 46) and (
+                                                temp[coin - 1] + self.move_red_counter > loc_coin_other):
+                                            temp_robo_store.remove(coin)
+                                            break
+
+
+                        process_forward = 1
+                        for coin in temp_robo_store:
+                            if temp[coin - 1] + self.move_red_counter in take_ref:
+                                process_forward = 0
+                                self.main_controller("red", coin)
+                                break
+                        if process_forward:
+                            take_len = len(temp_robo_store)
+                            store = {}
+                            if take_ref:
+                                for robo in temp_robo_store:
+                                    for coin_other in take_ref:
+                                        if coin_other > -1 and coin_other < 100:
+                                            if take_len > 1 and (temp[robo - 1] > 38 and coin_other <= 38) or \
+                                                    ((temp[robo - 1] == 9 or temp[robo - 1] == 14 or temp[robo - 1] == 27 or
+                                                    temp[robo - 1] == 35 or temp[robo - 1] == 40 or temp[robo - 1] == 48 or
+                                                    temp[robo - 1] == 22) and (coin_other <= temp[robo - 1] or
+                                                    (coin_other > temp[robo - 1] and coin_other <= temp[robo - 1] + 3))):
+                                                take_len -= 1
+                                            else:
+                                                store[temp[robo - 1] - coin_other] = (
+                                                robo, take_ref.index(coin_other) + 1)
+                            if store:
+                                store_positive_dis = {}
+                                store_negative_dis = {}
+                                take_max = 0
+                                take_min = 0
+
+                                try:
+                                    store_positive_dis = dict((k, v) for k, v in store.items() if k > 0)
+                                    take_min = min(store_positive_dis.items())
+                                except:
+                                    pass
+                                try:
+                                    store_negative_dis = dict((k, v) for k, v in store.items() if k < 0)
+                                    take_max = max(store_negative_dis.items())
+                                except:
+                                    pass
+                                work_comp_in_pos = 0
+                                take_len = len(store_positive_dis)
+                                index_from_last = -1
+
+                                while take_len:
+                                    if take_min and take_min[0] <= 6:
+
+                                        work_comp_in_pos = 1
+                                        self.main_controller("red", take_min[1][0])
+                                        break
+                                    else:
+                                        index_from_last -= 1
+                                        try:
+                                            take_min = min(sorted(store_positive_dis.items())[index_from_last])
+                                        except:
+                                            break
+                                    take_len -= 1
+                                work_comp_in_neg = 0
+                                if not work_comp_in_pos:
+                                    take_len = len(store_negative_dis)
+                                    index_from_last = len(store_negative_dis) - 1
+                                    while take_len:
+                                        if take_max and temp[take_max[1][0] - 1] + self.move_red_counter <= take_ref[
+                                            take_max[1][1] - 1]:
+                                            work_comp_in_neg = 1
+                                            self.main_controller("red", take_max[1][0])
+                                            break
+                                        else:
+                                            index_from_last -= 1
+                                            try:
+                                                take_max = max(sorted(store_negative_dis.items())[index_from_last])
+                                            except:
+                                                break
+                                        take_len -= 1
+                                if not work_comp_in_neg and not work_comp_in_pos:
+                                    close_to_dest = temp_robo_store[0]
+                                    for coin_index in range(1, len(temp_robo_store)):
+                                        if temp[temp_robo_store[coin_index] - 1] > temp[close_to_dest - 1]:
+                                            close_to_dest = temp_robo_store[coin_index]
+
+                                    self.main_controller("red", close_to_dest)
+                            else:
+                                close_to_dest = temp_robo_store[0]
+                                for coin_index in range(1, len(temp_robo_store)):
+                                    if temp[temp_robo_store[coin_index] - 1] > temp[close_to_dest - 1]:
+                                        close_to_dest = temp_robo_store[coin_index]
+                                self.main_controller("red", close_to_dest)
+                        else:
+                            pass
+
+                    if self.move_red_counter < 6:
+                        normal_movement_according_condition()
+                    else:
+                        coin_proceed = 0
+
+                        for coin in self.robo_store:
+                            if temp[coin - 1] + self.move_red_counter in self.sky_blue_coin_position:
+                                coin_proceed = coin
+                                break
+
+                        if not coin_proceed:
+                            if -1 in self.red_coin_position:
+                                temp_store = [1, 2, 3, 4]
+                                for coin in self.robo_store:
+                                    temp_store.remove(coin)
+                                take_pred = choice(temp_store)
+                                self.robo_store.append(take_pred)
+                                self.main_controller("red", take_pred)
+                            else:
+                                normal_movement_according_condition()
+                        else:
+                            self.main_controller("red", coin_proceed)
+        else:
+            self.make_prediction("red")
 
 
 if __name__ == '__main__':
