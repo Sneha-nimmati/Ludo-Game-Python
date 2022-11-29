@@ -500,53 +500,64 @@ class Ludo:
 
         top.mainloop()
 
-        def make_prediction(self, color_indicator):
-            try:
-                if color_indicator == "red":
-                    block_value_predict = self.block_value_predict[0]
-                    if self.robo_prem and self.count_robo_stage_from_start < 3:
-                        self.count_robo_stage_from_start += 1
-                    if self.robo_prem and self.count_robo_stage_from_start == 3 and self.six_counter < 2:
-                        permanent_block_number = self.move_red_counter = 6
-                        self.count_robo_stage_from_start += 1
-                    else:
-                        permanent_block_number = self.move_red_counter = randint(1, 6)
+    def make_prediction(self,color_indicator):
+        try:
+            if color_indicator == "red":
+                block_value_predict = self.block_value_predict[0]
+                if self.robo_prem and self.count_robo_stage_from_start < 3:
+                    self.count_robo_stage_from_start += 1
+                if self.robo_prem and self.count_robo_stage_from_start == 3 and self.six_counter < 2:
+                    permanent_block_number = self.move_red_counter = 6
+                    self.count_robo_stage_from_start += 1
+                else:    
+                    permanent_block_number = self.move_red_counter = randint(1, 6)
 
-                elif color_indicator == "sky_blue":
-                    block_value_predict = self.block_value_predict[1]
-                    permanent_block_number = self.move_sky_blue_counter = randint(1, 6)
-                    if self.robo_prem and permanent_block_number == 6:
-                        for coin_loc in self.red_coin_position:
-                            if 40 <= coin_loc <= 46:
-                                permanent_block_number = self.move_sky_blue_counter = randint(1, 5)
-                                break
+            elif color_indicator == "sky_blue":
+                block_value_predict = self.block_value_predict[1]
+                permanent_block_number = self.move_sky_blue_counter = randint(1, 6)
+                if self.robo_prem and permanent_block_number == 6:
+                    for coin_loc in self.red_coin_position:
+                        if coin_loc>=40 and coin_loc<=46:
+                            permanent_block_number = self.move_sky_blue_counter = randint(1, 5)
 
+            elif color_indicator == "yellow":
+                block_value_predict = self.block_value_predict[2]
+                permanent_block_number = self.move_yellow_counter = randint(1, 6)
+            else:
+                block_value_predict = self.block_value_predict[3]
+                permanent_block_number = self.move_green_counter = randint(1, 6)
 
-                temp_counter = 12
-                while temp_counter > 0:
-                    move_temp_counter = randint(1, 6)
-                    block_value_predict[0]['image'] = self.block_number_side[move_temp_counter - 1]
-                    self.window.update()
-                    time.sleep(0.1)
-                    temp_counter -= 1
+            block_value_predict[1]['state'] = DISABLED
 
-                print("Prediction result: ", permanent_block_number)
+            # Illusion of coin floating
+            temp_counter = 12
+            while temp_counter > 0:
+                move_temp_counter = randint(1, 6)
+                block_value_predict[0]['image'] = self.block_number_side[move_temp_counter - 1]
+                self.window.update()
+                time.sleep(0.1)
+                temp_counter -= 1
 
+            print("Prediction result: ", permanent_block_number)
 
-                block_value_predict[0]['image'] = self.block_number_side[permanent_block_number - 1]
-                if self.robo_prem == 1 and color_indicator == "red":
-                    self.window.update()
-                    time.sleep(0.4)
-                    self.instructional_btn_customization_based_on_current_situation(color_indicator, permanent_block_number,
-                                                                            block_value_predict)
-            except:
-                print("Force Stop Error in Prediction")
-
+            # Permanent predicted value containing image set
+            block_value_predict[0]['image'] = self.block_number_side[permanent_block_number - 1]
+            if self.robo_prem == 1 and color_indicator == "red":
+                self.window.update()
+                time.sleep(0.4)
+            self.instructional_btn_customization_based_on_current_situation(color_indicator, permanent_block_number,
+                                                                                block_value_predict)
+        except:
+            print("Force stop error")
     def instructional_btn_customization_based_on_current_situation(self, color_indicator, permanent_block_number,
                                                                    block_value_predict):
         robo_operator = None
         if color_indicator == "red":
             temp_coin_position = self.red_coin_position
+        elif color_indicator == "blue":
+            temp_coin_position = self.sky_blue_coin_position
+        elif color_indicator == "yellow":
+            temp_coin_position = self.yellow_coin_position
         else:
             temp_coin_position = self.sky_blue_coin_position
 
@@ -804,24 +815,29 @@ class Ludo:
                         self.robo_store.remove(int(coin_number))
                         print("After removing: ", self.robo_store)
 
+                else:
                     if self.robo_prem:
                         robo_operator = "give"
                         self.robo_judge(robo_operator)
                     return
-
-                if self.red_coin_position[int(coin_number) - 1] == 22 or self.red_coin_position[
-                    int(coin_number) - 1] == 9 or self.red_coin_position[int(coin_number) - 1] == 48 or \
-                        self.red_coin_position[int(coin_number) - 1] == 35 or self.red_coin_position[
-                    int(coin_number) - 1] == 14 or self.red_coin_position[int(coin_number) - 1] == 27 or \
-                        self.red_coin_position[int(coin_number) - 1] == 40 or self.red_coin_position[
-                    int(coin_number) - 1] == 1:
+                if  self.red_coin_position[int(coin_number)-1]==22 or self.red_coin_position[int(coin_number)-1]==9 or self.red_coin_position[int(coin_number)-1]==48 or self.red_coin_position[int(coin_number)-1]==35 or self.red_coin_position[int(coin_number)-1]==14 or self.red_coin_position[int(coin_number)-1]==27 or self.red_coin_position[int(coin_number)-1]==40 or self.red_coin_position[int(coin_number)-1]==1:
                     pass
+
                 else:
                     if self.red_coin_position[int(coin_number) - 1] < 100:
                         self.coord_overlap(self.red_coin_position[int(coin_number) - 1], color_coin,
                                            self.move_red_counter)
 
                 self.red_coord_store[int(coin_number) - 1] = self.red_coin_position[int(coin_number) - 1]
+            else:
+                self.num_btns_state_controller(self.block_value_predict[0][2])
+
+                if self.robo_prem == 1:
+                    robo_operator = "give"
+                    self.robo_judge(robo_operator)
+                return
+            self.block_value_predict[0][1]['state'] = NORMAL
+
 
         elif color_coin == "sky_blue":
             self.num_btns_state_controller(self.block_value_predict[1][2], 0)
@@ -846,8 +862,7 @@ class Ludo:
                         self.made_sky_blue_coin[int(coin_number) - 1], self.sky_blue_number_label[int(coin_number) - 1],
                         sky_blue_start_label_x, sky_blue_start_label_y, "sky_blue", self.move_sky_blue_counter)
                 else:
-                    messagebox.showerror("Not possible", "No path available")
-
+                    
                     self.num_btns_state_controller(self.block_value_predict[1][2])
                     return
 
