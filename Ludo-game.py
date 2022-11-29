@@ -418,6 +418,23 @@ class Ludo:
         top.config(bg="white")
         top.iconbitmap("Images/ludo_icon.ico")
 
+        head = Label(top, text="-:Total number of players:- ", font=("Arial", 25, "bold", "italic"), bg="orange",
+                     fg="chocolate")
+        head.place(x=70, y=30)
+        take_entry = Entry(top, font=("Arial", 18, "bold", "italic"), relief=SUNKEN, bd=7, width=12)
+        take_entry.place(x=150, y=80)
+        take_entry.focus()
+
+        def filtering():  # Total player input value filtering
+            response_take = self.input_filtering(take_entry.get())
+            if response_take is True and int(take_entry.get()) > 1:
+                for player_index in range(int(take_entry.get())):
+                    self.total_people_play.append(player_index)
+                print(self.total_people_play)
+                self.make_command()
+                top.destroy()
+            else:
+                messagebox.showerror("Input Error", "Please input number of players between 2 and 4")
 
         def operate(ind):
             if ind:
@@ -433,19 +450,19 @@ class Ludo:
                         command_play.place_forget()
 
                     place_ins['text'] = f"  Your game will start within {time_is} sec"
-                    place_ins.place(x=250, y=260)
+                    place_ins.place(x=20, y=220)
 
                     if time_is > 5:
-                        command_play['text'] = f"         Machine Play With Red and You Play With Sky Blue"
+                        command_play['text'] = f"             Machine Play With Red and You Play With Sky Blue"
                     elif time_is >= 2 and time_is < 5:
                         command_play['text'] = f"                       You Will Get the First Chance to play"
                     else:
-                        command_play['text'] = f"                                      Enjoy this Game               "
-                    command_play.place(x=220, y=300)
+                        command_play['text'] = f"                                        Enjoy this Game"
+                    command_play.place(x=10, y=260)
 
                 time_is = 10
-                place_ins = Label(top, text="", font=("Times New Roman", 18, "italic"), fg="black", bg="#F8F7F9")
-                command_play = Label(top, text="", font=("Times New Roman", 12, "italic"), fg="black", bg="#F8F7F9")
+                place_ins = Label(top, text="", font=("Arial", 20, "bold"), fg="#FF0000", bg="#141414")
+                command_play = Label(top, text="", font=("Arial", 12, "bold"), fg="#af7439", bg="#141414")
 
                 try:
                     while time_is:
@@ -457,10 +474,18 @@ class Ludo:
                 except:
                     print("Force Stop Error in Operate")
                 self.block_value_predict[1][1]['state'] = NORMAL
+            else:
+                submit_btn['state'] = NORMAL
+                take_entry['state'] = NORMAL
 
         mvc_btn = Button(top, text="Play With Computer", bg="#2B4AF7", fg="#FCFCFD", font=("Times New Roman", 16, "bold"),
                          relief=RAISED, bd=3, command=lambda: operate(1), activebackground="#2B4AF7")
-        mvc_btn.place(x=300, y=200)
+        mvc_btn.place(x=300, y=210)
+
+        mvh_btn = Button(top, text="Play With Friends", bg="#262626", fg="#00FF00", font=("Arial", 15, "bold"),
+                         relief=RAISED, bd=3, command=lambda: operate(0), activebackground="#262626")
+        mvh_btn.place(x=300
+                      , y=300)
 
         pygame.mixer.init()
 
@@ -494,9 +519,9 @@ class Ludo:
         off = PhotoImage(file="sound/soff.png")
 
         label1 = Label(top, text="Sound:", font=("Arial", 30, "bold"))
-        label1.place(x=190, y=120)
+        label1.place(x=300, y=140)
         on_button = Button(top, image=on, bd=0, command=switch)
-        on_button.place(x=308, y=120)
+        on_button.place(x=435, y=140)
 
         top.mainloop()
 
