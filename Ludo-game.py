@@ -80,6 +80,7 @@ class Ludo:
 
         self.instruction_btn_red()
         self.instruction_btn_sky_blue()
+        self.instruction_btn_yellow()
        
 
         self.take_initial_control()
@@ -406,7 +407,7 @@ class Ludo:
 
     
     def take_initial_control(self):
-        for i in range(2):
+        for i in range(4):
             self.block_value_predict[i][1]['state'] = DISABLED
             print(self.block_value_predict)
 
@@ -425,7 +426,7 @@ class Ludo:
         take_entry.place(x=150, y=80)
         take_entry.focus()
 
-        def filtering():  # Total player input value filtering
+        def filtering(): 
             response_take = self.input_filtering(take_entry.get())
             if response_take is True and int(take_entry.get()) > 1:
                 for player_index in range(int(take_entry.get())):
@@ -434,7 +435,7 @@ class Ludo:
                 self.make_command()
                 top.destroy()
             else:
-                messagebox.showerror("Input Error", "Please input number of players between 2 and 4")
+                messagebox.showerror("Input Error", "Please enter only values between 2 and 4")
 
         def operate(ind):
             if ind:
@@ -453,11 +454,11 @@ class Ludo:
                     place_ins.place(x=20, y=220)
 
                     if time_is > 5:
-                        command_play['text'] = f"             Machine Play With Red and You Play With Sky Blue"
+                        command_play['text'] = f"             Computer will Play With Red coin and the Player will play With Sky Blue Coin"
                     elif time_is >= 2 and time_is < 5:
-                        command_play['text'] = f"                       You Will Get the First Chance to play"
+                        command_play['text'] = f"                       Player will get the first chance to play the game"
                     else:
-                        command_play['text'] = f"                                        Enjoy this Game"
+                        command_play['text'] = f"                                       All the best!!! Enjoy the Game"
                     command_play.place(x=10, y=260)
 
                 time_is = 10
@@ -482,7 +483,7 @@ class Ludo:
                          relief=RAISED, bd=3, command=lambda: operate(1), activebackground="#2B4AF7")
         mvc_btn.place(x=300, y=210)
 
-        mvh_btn = Button(top, text="Play With Friends", bg="#262626", fg="#00FF00", font=("Arial", 15, "bold"),
+        mvh_btn = Button(top, text="Play With Friends", bg="#262626", fg="#00FF00", font=("Times New Roman", 15, "bold"),
                          relief=RAISED, bd=3, command=lambda: operate(0), activebackground="#262626")
         mvh_btn.place(x=300
                       , y=300)
@@ -579,8 +580,8 @@ class Ludo:
         robo_operator = None
         if color_indicator == "red":
             temp_coin_position = self.red_coin_position
-        elif color_indicator == "blue":
-            temp_coin_position = self.sky_blue_coin_position
+        elif color_indicator == "green":
+            temp_coin_position = self.green_coin_position
         elif color_indicator == "yellow":
             temp_coin_position = self.yellow_coin_position
         else:
@@ -735,6 +736,24 @@ class Ludo:
                                                                                                                         40 * 6 + 40 * 3) + 40 + 110 + 50)
         self.store_instructional_btn(block_predict_sky_blue, predict_sky_blue, [btn_1, btn_2, btn_3, btn_4])
 
+    def instruction_btn_yellow(self):
+        block_predict_yellow = Label(self.make_canvas, image=self.block_number_side[0])
+        block_predict_yellow.place(x=100 + (40 * 6 + 40 * 3 + 40 * 6 + 10)+20, y=15 + (40 * 6 + 40 * 3) + 10)
+        predict_yellow = Button(self.make_canvas, bg="black", fg="#00FF00", relief=RAISED, bd=5, text="Predict",font=("Arial", 8, "bold"), command=lambda: self.make_prediction("yellow"))
+        predict_yellow.place(x=100 + (40 * 6 + 40 * 3 + 40 * 6 + 2)+20, y=15 + (40 * 6 + 40 * 3) + 40 + 20)
+        
+        btn_1 = Button(self.make_canvas,bg="#262626",fg="#00eb00",text="1",font=("Arial",13,"bold","italic"),relief=RAISED,bd=3,command=lambda: self.main_controller("yellow",'1'), state=DISABLED, disabledforeground="red")
+        btn_1.place(x=100 + (40 * 6 + 40 * 3 + 40 * 6 + 2)+15, y=15 + (40 * 6 + 40 * 3) + 40 + 70)
+        btn_2 = Button(self.make_canvas,bg="#262626",fg="#00eb00",text="2",font=("Arial",13,"bold","italic"),relief=RAISED,bd=3,command=lambda: self.main_controller("yellow",'2'), state=DISABLED, disabledforeground="red")
+        btn_2.place(x=100 + (40 * 6 + 40 * 3 + 40 * 6 + 2)+15 + 40, y=15 + (40 * 6 + 40 * 3) + 40 + 70)
+        btn_3 = Button(self.make_canvas,bg="#262626",fg="#00eb00",text="3",font=("Arial",13,"bold","italic"),relief=RAISED,bd=3,command=lambda: self.main_controller("yellow",'3'), state=DISABLED, disabledforeground="red")
+        btn_3.place(x=100 + (40 * 6 + 40 * 3 + 40 * 6 + 2)+15, y=15 + (40 * 6 + 40 * 3) + 40 + 70+ 40)
+        btn_4 = Button(self.make_canvas,bg="#262626",fg="#00eb00",text="4",font=("Arial",13,"bold","italic"),relief=RAISED,bd=3,command=lambda: self.main_controller("yellow",'4'), state=DISABLED, disabledforeground="red")
+        btn_4.place(x=100 + (40 * 6 + 40 * 3 + 40 * 6 + 2)+15 + 40, y=15 + (40 * 6 + 40 * 3) + 40 + 70+ 40)
+        
+        Label(self.make_canvas, text="Player 3", bg="#141414", fg="gold", font=("Arial", 15, "bold")).place(x=100 + (40 * 6 + 40 * 3 + 40 * 6 +7),y=15+(40*6+40*3)+40 + 110+50)
+        self.store_instructional_btn(block_predict_yellow, predict_yellow, [btn_1,btn_2,btn_3,btn_4])    
+    
     def store_instructional_btn(self, block_indicator, predictor, entry_controller):
         temp = []
         temp.append(block_indicator)
@@ -819,7 +838,7 @@ class Ludo:
             self.num_btns_state_controller(self.block_value_predict[0][2], 0)
 
             if self.move_red_counter == 106:
-                messagebox.showwarning("Destination reached", "Reached at the destination")
+                messagebox.showwarning("Reached to the final point","Reached to the final point of the game")
 
             elif self.red_coin_position[int(coin_number) - 1] == -1 and self.move_red_counter == 6:
                 self.red_circle_start_position(coin_number)
@@ -841,6 +860,10 @@ class Ludo:
                         print("After removing: ", self.robo_store)
 
                 else:
+                    if not self.robo_prem: 
+                            messagebox.showerror("Not possible","Sorry, not permitted")
+                    self.num_btns_state_controller(self.block_value_predict[0][2])
+
                     if self.robo_prem:
                         robo_operator = "give"
                         self.robo_judge(robo_operator)
@@ -863,12 +886,51 @@ class Ludo:
                 return
             self.block_value_predict[0][1]['state'] = NORMAL
 
+        elif color_coin == "yellow":
+            
+            self.num_btns_state_controller(self.block_value_predict[2][2], 0)
+
+            if self.move_yellow_counter == 106:
+                messagebox.showwarning("Reached to the final point","Reached to the final point of the game")
+
+            elif self.yellow_coin_position[int(coin_number) - 1] == -1 and self.move_yellow_counter == 6:
+                self.yellow_circle_start_position(coin_number)
+                self.yellow_coord_store[int(coin_number) - 1] = 27
+
+            elif self.yellow_coin_position[int(coin_number) - 1] > -1:
+                take_coord = self.make_canvas.coords(self.made_yellow_coin[int(coin_number) - 1])
+                yellow_start_label_x = take_coord[0] + 10
+                yellow_start_label_y = take_coord[1] + 5
+                self.yellow_number_label[int(coin_number) - 1].place(x=yellow_start_label_x, y=yellow_start_label_y)
+
+                if  self.yellow_coin_position[int(coin_number) - 1] + self.move_yellow_counter <= 106:
+                    self.yellow_coin_position[int(coin_number) - 1] = self.motion_of_coin(self.yellow_coin_position[int(coin_number) - 1], self.made_yellow_coin[int(coin_number) - 1], self.yellow_number_label[int(coin_number) - 1], yellow_start_label_x, yellow_start_label_y, "yellow", self.move_yellow_counter)
+                else:
+                   messagebox.showerror("Not possible","This path is not available")
+                   
+                   self.num_btns_state_controller(self.block_value_predict[2][2])
+                   return
+
+                if  self.yellow_coin_position[int(coin_number)-1]==22 or self.yellow_coin_position[int(coin_number)-1]==9 or self.yellow_coin_position[int(coin_number)-1]==48 or self.yellow_coin_position[int(coin_number)-1]==35 or self.yellow_coin_position[int(coin_number)-1]==1 or self.yellow_coin_position[int(coin_number)-1]==14 or self.yellow_coin_position[int(coin_number)-1]==40 or self.yellow_coin_position[int(coin_number)-1]==27:
+                    pass
+                else:
+                    if self.yellow_coin_position[int(coin_number) - 1] < 100:
+                        self.coord_overlap(self.yellow_coin_position[int(coin_number) - 1],color_coin, self.move_yellow_counter)
+
+                self.yellow_coord_store[int(coin_number) - 1] = self.yellow_coin_position[int(coin_number) - 1]
+
+            else:
+                messagebox.showerror("Wrong choice", "Sorry, This coin in not permitted to travel now")
+                self.num_btns_state_controller(self.block_value_predict[2][2])
+                return
+
+            self.block_value_predict[2][1]['state'] = NORMAL
 
         elif color_coin == "sky_blue":
             self.num_btns_state_controller(self.block_value_predict[1][2], 0)
 
             if self.move_red_counter == 106:
-                messagebox.showwarning("Destination reached", "Reached at the destination")
+                messagebox.showwarning("Reached to the final point","Reached to the final point of the game")
 
             elif self.sky_blue_coin_position[int(coin_number) - 1] == -1 and self.move_sky_blue_counter == 6:
                 self.sky_blue_circle_start_position(coin_number)
@@ -887,7 +949,7 @@ class Ludo:
                         self.made_sky_blue_coin[int(coin_number) - 1], self.sky_blue_number_label[int(coin_number) - 1],
                         sky_blue_start_label_x, sky_blue_start_label_y, "sky_blue", self.move_sky_blue_counter)
                 else:
-                    
+                    messagebox.showerror("Not possible","No path available")
                     self.num_btns_state_controller(self.block_value_predict[1][2])
                     return
 
@@ -906,7 +968,7 @@ class Ludo:
                 self.sky_blue_coord_store[int(coin_number) - 1] = self.sky_blue_coin_position[int(coin_number) - 1]
 
             else:
-                messagebox.showerror("Wrong choice", "Sorry, Your coin in not permitted to travel")
+                messagebox.showerror("Wrong choice", "Sorry, This coin in not permitted to travel now")
                 self.num_btns_state_controller(self.block_value_predict[1][2])
                 return
 
@@ -953,9 +1015,9 @@ class Ludo:
                     if counter_coin == 106:
 
                         if self.robo_prem == 1 and color_coin == "red":
-                            messagebox.showinfo("Destination reached", "Hey! I am at the destination")
+                            messagebox.showinfo("Final Destination reached", "Hey! I am at the final point of the game....")
                         else:
-                            messagebox.showinfo("Destination reached", "Congrats! You now at the destination")
+                            messagebox.showinfo("Final Destination reached", "Congratulations! You are at the final point of the game...")
                         if path_counter == 6:
                             self.six_with_overlap = 1
                         else:
