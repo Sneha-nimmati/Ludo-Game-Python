@@ -81,6 +81,7 @@ class Ludo:
         self.instruction_btn_red()
         self.instruction_btn_sky_blue()
         self.instruction_btn_yellow()
+        self.instruction_btn_green()
        
 
         self.take_initial_control()
@@ -426,16 +427,28 @@ class Ludo:
         take_entry.place(x=150, y=80)
         take_entry.focus()
 
-        def filtering(): 
-            response_take = self.input_filtering(take_entry.get())
-            if response_take is True and int(take_entry.get()) > 1:
+        def filtering():
+            def input_filtering(coin_number):
+                try:
+                    return True if (4 >= int(coin_number) >= 2) or type(coin_number) == int else False
+                except:
+                    return False
+
+            response_take = input_filtering(take_entry.get())
+            if response_take:
                 for player_index in range(int(take_entry.get())):
                     self.total_people_play.append(player_index)
                 print(self.total_people_play)
                 self.make_command()
                 top.destroy()
             else:
-                messagebox.showerror("Input Error", "Please enter only values between 2 and 4")
+                messagebox.showerror("Input Error", "Please input number of players between 2 and 4")
+                top.destroy()
+                self.take_initial_control()
+
+        submit_btn = Button(top, text="Submit", bg="#262626", fg="#00FF00", font=("Arial", 13, "bold"), relief=RAISED,
+                            bd=3, command=filtering, state=DISABLED)
+        submit_btn.place(x=330, y=87)
 
         def operate(ind):
             if ind:
@@ -739,7 +752,7 @@ class Ludo:
     def instruction_btn_yellow(self):
         block_predict_yellow = Label(self.make_canvas, image=self.block_number_side[0])
         block_predict_yellow.place(x=100 + (40 * 6 + 40 * 3 + 40 * 6 + 10)+20, y=15 + (40 * 6 + 40 * 3) + 10)
-        predict_yellow = Button(self.make_canvas, bg="black", fg="#00FF00", relief=RAISED, bd=5, text="Predict",font=("Arial", 8, "bold"), command=lambda: self.make_prediction("yellow"))
+        predict_yellow = Button(self.make_canvas, bg="black", fg="#00FF00", relief=RAISED, bd=5, text="Roll",font=("Arial", 8, "bold"), command=lambda: self.make_prediction("yellow"))
         predict_yellow.place(x=100 + (40 * 6 + 40 * 3 + 40 * 6 + 2)+20, y=15 + (40 * 6 + 40 * 3) + 40 + 20)
         
         btn_1 = Button(self.make_canvas,bg="#262626",fg="#00eb00",text="1",font=("Arial",13,"bold","italic"),relief=RAISED,bd=3,command=lambda: self.main_controller("yellow",'1'), state=DISABLED, disabledforeground="red")
@@ -752,8 +765,36 @@ class Ludo:
         btn_4.place(x=100 + (40 * 6 + 40 * 3 + 40 * 6 + 2)+15 + 40, y=15 + (40 * 6 + 40 * 3) + 40 + 70+ 40)
         
         Label(self.make_canvas, text="Player 3", bg="#141414", fg="gold", font=("Arial", 15, "bold")).place(x=100 + (40 * 6 + 40 * 3 + 40 * 6 +7),y=15+(40*6+40*3)+40 + 110+50)
-        self.store_instructional_btn(block_predict_yellow, predict_yellow, [btn_1,btn_2,btn_3,btn_4])    
-    
+        self.store_instructional_btn(block_predict_yellow, predict_yellow, [btn_1,btn_2,btn_3,btn_4])
+
+    def instruction_btn_green(self):
+        block_predict_green = Label(self.make_canvas, image=self.block_number_side[0])
+        block_predict_green.place(x=100 + (40 * 6 + 40 * 3 + 40 * 6 + 10) + 20, y=15)
+        predict_green = Button(self.make_canvas, bg="black", fg="#00FF00", relief=RAISED, bd=5, text="Roll",
+                               font=("Arial", 8, "bold"), command=lambda: self.make_prediction("green"))
+        predict_green.place(x=100 + (40 * 6 + 40 * 3 + 40 * 6 + 2) + 20, y=15 + 50)
+
+        btn_1 = Button(self.make_canvas, bg="#262626", fg="#00eb00", text="1", font=("Arial", 13, "bold", "italic"),
+                       relief=RAISED, bd=3, command=lambda: self.main_controller("green", '1'), state=DISABLED,
+                       disabledforeground="red")
+        btn_1.place(x=100 + (40 * 6 + 40 * 3 + 40 * 6 + 2) + 15, y=15 + 100)
+        btn_2 = Button(self.make_canvas, bg="#262626", fg="#00eb00", text="2", font=("Arial", 13, "bold", "italic"),
+                       relief=RAISED, bd=3, command=lambda: self.main_controller("green", '2'), state=DISABLED,
+                       disabledforeground="red")
+        btn_2.place(x=100 + (40 * 6 + 40 * 3 + 40 * 6 + 2) + 15 + 40, y=15 + 100)
+        btn_3 = Button(self.make_canvas, bg="#262626", fg="#00eb00", text="3", font=("Arial", 13, "bold", "italic"),
+                       relief=RAISED, bd=3, command=lambda: self.main_controller("green", '3'), state=DISABLED,
+                       disabledforeground="red")
+        btn_3.place(x=100 + (40 * 6 + 40 * 3 + 40 * 6 + 2) + 15, y=15 + 100 + 40)
+        btn_4 = Button(self.make_canvas, bg="#262626", fg="#00eb00", text="4", font=("Arial", 13, "bold", "italic"),
+                       relief=RAISED, bd=3, command=lambda: self.main_controller("green", '4'), state=DISABLED,
+                       disabledforeground="red")
+        btn_4.place(x=100 + (40 * 6 + 40 * 3 + 40 * 6 + 2) + 15 + 40, y=15 + 100 + 40)
+
+        Label(self.make_canvas, text="Player 4", bg="#141414", fg="gold", font=("Arial", 15, "bold")).place(
+            x=100 + (40 * 6 + 40 * 3 + 40 * 6 + 7), y=15 + 140 + 50)
+        self.store_instructional_btn(block_predict_green, predict_green, [btn_1, btn_2, btn_3, btn_4])
+
     def store_instructional_btn(self, block_indicator, predictor, entry_controller):
         temp = []
         temp.append(block_indicator)
@@ -973,6 +1014,52 @@ class Ludo:
                 return
 
             self.block_value_predict[1][1]['state'] = NORMAL
+        elif color_coin == "green":
+            self.num_btns_state_controller(self.block_value_predict[3][2], 0)
+
+            if self.move_green_counter == 106:
+                messagebox.showwarning("Destination reached", "Reached at the destination")
+
+            elif self.green_coin_position[int(coin_number) - 1] == -1 and self.move_green_counter == 6:
+                self.green_circle_start_position(coin_number)
+                self.green_coord_store[int(coin_number) - 1] = 14
+
+            elif self.green_coin_position[int(coin_number) - 1] > -1:
+                take_coord = self.make_canvas.coords(self.made_green_coin[int(coin_number) - 1])
+                green_start_label_x = take_coord[0] + 10
+                green_start_label_y = take_coord[1] + 5
+                self.green_number_label[int(coin_number) - 1].place(x=green_start_label_x, y=green_start_label_y)
+
+                if self.green_coin_position[int(coin_number) - 1] + self.move_green_counter <= 106:
+                    self.green_coin_position[int(coin_number) - 1] = self.motion_of_coin(
+                        self.green_coin_position[int(coin_number) - 1], self.made_green_coin[int(coin_number) - 1],
+                        self.green_number_label[int(coin_number) - 1], green_start_label_x, green_start_label_y,
+                        "green", self.move_green_counter)
+                else:
+                    messagebox.showerror("Not possible", "No path available")
+                    self.num_btns_state_controller(self.block_value_predict[3][2])
+                    return
+
+                if self.green_coin_position[int(coin_number) - 1] == 22 or self.green_coin_position[
+                    int(coin_number) - 1] == 9 or self.green_coin_position[int(coin_number) - 1] == 48 or \
+                        self.green_coin_position[int(coin_number) - 1] == 35 or self.green_coin_position[
+                    int(coin_number) - 1] == 1 or self.green_coin_position[int(coin_number) - 1] == 27 or \
+                        self.green_coin_position[int(coin_number) - 1] == 40 or self.green_coin_position[
+                    int(coin_number) - 1] == 14:
+                    pass
+                else:
+                    if self.green_coin_position[int(coin_number) - 1] < 100:
+                        self.coord_overlap(self.green_coin_position[int(coin_number) - 1], color_coin,
+                                           self.move_green_counter)
+
+                self.green_coord_store[int(coin_number) - 1] = self.green_coin_position[int(coin_number) - 1]
+
+            else:
+                messagebox.showerror("Wrong choice", "Sorry, Your coin in not permitted to travel")
+                self.num_btns_state_controller(self.block_value_predict[3][2])
+                return
+
+            self.block_value_predict[3][1]['state'] = NORMAL
 
         print(self.red_coord_store)
         print(self.green_coord_store)
