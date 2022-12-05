@@ -1358,19 +1358,31 @@ class Ludo:
             self.take_permission += 1
             if self.take_permission == 1:
                 if self.robo_prem == 1 and color_coin == "red":
-                    messagebox.showinfo("Winner", "Hurrah! I am the winner")
+                    messagebox.showinfo("Winner", "Hurrah! I am the winner for this game....")
                 else:
-                    messagebox.showinfo("Winner","Congrats! You are the winner")
+                    messagebox.showinfo("Winner","Congrats! You are the winner....")
+            elif self.take_permission == 2:
+                if self.robo_prem == 1 and color_coin == "red":
+                    messagebox.showinfo("Winner", "Hey!!! I am 1st runner...")
+                else:
+                    messagebox.showinfo("Winner", "Wow! You are 1st runner...")
+            elif self.take_permission == 3:
+                if self.robo_prem == 1 and color_coin == "red":
+                    messagebox.showinfo("Result", "I am 2nd runner of this game....Not bad at all")
+                else:
+                    messagebox.showinfo("Result", "You are the 2nd runner of this game....Better Luck next time")
+
             self.block_value_predict[temp_delete][1]['state'] = DISABLED
             self.total_people_play.remove(temp_delete)
 
             if len(self.total_people_play) == 1:
+                messagebox.showinfo("Game Over","Good bye!!!! Good luck next time...")
                 self.block_value_predict[0][1]['state'] = DISABLED
                 return False
             else:
                 self.time_for-=1
         else:
-            print("Winner not decided")
+            print("Winner is  not decided")
 
         return True
 
