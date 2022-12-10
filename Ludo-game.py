@@ -7,8 +7,8 @@ from random import randint, choice
 
 
 class Ludo:
-    def __init__(self, root, six_side_block, five_side_block, four_side_block, three_side_block, two_side_block,
-                 one_side_block):
+    def __init__(self, root, six_dice, five_dice, four_dice, three_dice, two_dice,
+                 one_dice):
         self.window = root
         
         self.make_canvas = Canvas(self.window, bg="#E9C67F", width=800, height=630)
@@ -28,8 +28,8 @@ class Ludo:
         self.block_value_predict = []
         self.total_people_play = []
 
-        self.block_number_side = [one_side_block, two_side_block, three_side_block, four_side_block, five_side_block,
-                                  six_side_block]
+        self.block_number_side = [one_dice, two_dice, three_dice, four_dice, five_dice,
+                                   six_dice]
 
         
         self.red_coord_store = [-1, -1, -1, -1]
@@ -420,11 +420,11 @@ class Ludo:
         top.config(bg="white")
         top.iconbitmap("Images/ludo_icon.ico")
 
-        head = Label(top, text="-:Total number of players:- ", font=("Arial", 25, "bold", "italic"), bg="orange",
+        head = Label(top, text="-:Total number of players:- ", font=("Arial", 12, "bold", "italic"), bg="orange",
                      fg="chocolate")
-        head.place(x=70, y=30)
+        head.place(x=70, y=220)
         take_entry = Entry(top, font=("Arial", 18, "bold", "italic"), relief=SUNKEN, bd=7, width=12)
-        take_entry.place(x=150, y=80)
+        take_entry.place(x=320, y=220)
         take_entry.focus()
 
         def filtering():
@@ -448,7 +448,7 @@ class Ludo:
 
         submit_btn = Button(top, text="Submit", bg="#262626", fg="#00FF00", font=("Arial", 13, "bold"), relief=RAISED,
                             bd=3, command=filtering, state=DISABLED)
-        submit_btn.place(x=330, y=87)
+        submit_btn.place(x=550, y=220)
 
         def operate(ind):
             if ind:
@@ -492,14 +492,14 @@ class Ludo:
                 submit_btn['state'] = NORMAL
                 take_entry['state'] = NORMAL
 
-        mvc_btn = Button(top, text="Play With Computer", bg="#2B4AF7", fg="#FCFCFD", font=("Times New Roman", 16, "bold"),
+        mvc_btn = Button(top, text="Play With Computer", bg="#2B4AF7", fg="#FCFCFD", font=("Times New Roman", 12, "bold"),
                          relief=RAISED, bd=3, command=lambda: operate(1), activebackground="#2B4AF7")
-        mvc_btn.place(x=300, y=210)
+        mvc_btn.place(x=400, y=150)
 
-        mvh_btn = Button(top, text="Play With Friends", bg="#262626", fg="#00FF00", font=("Times New Roman", 15, "bold"),
+        mvh_btn = Button(top, text="Play With Friends", bg="#262626", fg="#00FF00", font=("Times New Roman", 12, "bold"),
                          relief=RAISED, bd=3, command=lambda: operate(0), activebackground="#262626")
-        mvh_btn.place(x=300
-                      , y=300)
+        mvh_btn.place(x=220
+                      , y=150)
 
         pygame.mixer.init()
 
@@ -532,10 +532,10 @@ class Ludo:
         on = PhotoImage(file="sound/son.png")
         off = PhotoImage(file="sound/soff.png")
 
-        label1 = Label(top, text="Sound:", font=("Arial", 30, "bold"))
-        label1.place(x=300, y=140)
+        label1 = Label(top, text="Sound:", font=("Arial", 16, "bold"))
+        label1.place(x=635, y=20)
         on_button = Button(top, image=on, bd=0, command=switch)
-        on_button.place(x=435, y=140)
+        on_button.place(x=720, y=20)
 
         top.mainloop()
 
@@ -558,6 +558,7 @@ class Ludo:
                     for coin_loc in self.red_coin_position:
                         if coin_loc>=40 and coin_loc<=46:
                             permanent_block_number = self.move_sky_blue_counter = randint(1, 5)
+                            break
 
             elif color_indicator == "yellow":
                 block_value_predict = self.block_value_predict[2]
@@ -919,13 +920,14 @@ class Ludo:
 
                 self.red_coord_store[int(coin_number) - 1] = self.red_coin_position[int(coin_number) - 1]
             else:
+                messagebox.showerror("Wrong choice","Sorry, Your coin in not permitted to travel")
                 self.num_btns_state_controller(self.block_value_predict[0][2])
 
                 if self.robo_prem == 1:
                     robo_operator = "give"
                     self.robo_judge(robo_operator)
                 return
-            self.block_value_predict[0][1]['state'] = NORMAL
+            self.block_value_predict[0][1]['state'] = NORMAL    
 
         elif color_coin == "yellow":
             
@@ -1677,13 +1679,13 @@ if __name__ == '__main__':
     window.geometry("800x630")
     window.maxsize(800, 630)
     window.minsize(800, 630)
-    window.title("AI Integration With Ludo")
+    window.title("Ludo Board Game")
     window.iconbitmap("Images/ludo_icon.ico")
-    block_six_side = ImageTk.PhotoImage(Image.open("Images/6_block.png").resize((35, 35), Image.ANTIALIAS))
-    block_five_side = ImageTk.PhotoImage(Image.open("Images/5_block.png").resize((35, 35), Image.ANTIALIAS))
-    block_four_side = ImageTk.PhotoImage(Image.open("Images/4_block.png").resize((35, 35), Image.ANTIALIAS))
-    block_three_side = ImageTk.PhotoImage(Image.open("Images/3_block.png").resize((35, 35), Image.ANTIALIAS))
-    block_two_side = ImageTk.PhotoImage(Image.open("Images/2_block.png").resize((35, 35), Image.ANTIALIAS))
-    block_one_side = ImageTk.PhotoImage(Image.open("Images/1_block.png").resize((35, 35), Image.ANTIALIAS))
-    Ludo(window, block_six_side, block_five_side, block_four_side, block_three_side, block_two_side, block_one_side)
+    dice_six = ImageTk.PhotoImage(Image.open("Images/6_block.png").resize((35, 35), Image.ANTIALIAS))
+    dice_five = ImageTk.PhotoImage(Image.open("Images/5_block.png").resize((35, 35), Image.ANTIALIAS))
+    dice_four = ImageTk.PhotoImage(Image.open("Images/4_block.png").resize((35, 35), Image.ANTIALIAS))
+    dice_three = ImageTk.PhotoImage(Image.open("Images/3_block.png").resize((35, 35), Image.ANTIALIAS))
+    dice_two = ImageTk.PhotoImage(Image.open("Images/2_block.png").resize((35, 35), Image.ANTIALIAS))
+    dice_one = ImageTk.PhotoImage(Image.open("Images/1_block.png").resize((35, 35), Image.ANTIALIAS))
+    Ludo(window, dice_six, dice_five, dice_four, dice_three, dice_two, dice_one)
     window.mainloop()
