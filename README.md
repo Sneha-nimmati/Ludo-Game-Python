@@ -52,6 +52,31 @@
     If User wants to play with computer he can choose play with computer and start the game. As soon as the player selects play with computer option, a message will be displayed which gives information about the color of the coin that is assigned to computer and to the player. The message also contains the information about who to start the game and the window disappears. Then the Ludo board is lanched where computer and player starts the Game.
 
 <br/>
+### 2. Play With Friends
+    The second option User can choose is to play with friends. If a user chooses this option, he has to enter number of players to play the game in the input field and start the game. If a user doesnot enters a value between 2 and 4 it displays a message saying please enter values between 2 and 4. if the user enters the correct value and click on start then the ludo board will be launched where the players can start the game.
+<br/>
+
+Once the Game starts in any of the above scenarios players can start the game by rolling a dice. Whenever any player gets 6 in the dice he can move one of his coins from initial position to game starting position and also gets one more chance to roll the dice.Based the on value on the dice player can traverse any one of his coins forward by clicking on the number label available beside his color. Then the next player gets the chance to roll the dice and the game continues till any player moves all of his coins to the final position of the game.While playing the game any player can kill the coin of opponents and moves his coin to the same position,this player also gets one more chance to roll the dice in this scenario. The coin that got killed will move to the initial position of the game. The game ends when n-1 players moves all of their coins to the final position(n is total number of player) and displays a message box syaing "Game over". Everytime  a player traverse his coin to the final postion an alert box appears which contains the message saying "You are at the final position". A congratulatory alert box appears when any player traverses all of his coins to the final positions.
+
+<br/>
+
+# Testing:
+
+We have tested few scenarios using Unittest in python.
+
+    1.Checking if valid number is entered when play with friends is selected.
+    2.Checking initial positions of the coins.
+<br/>
+
+
+# Contributors:
+
+<br/>
+
+### This game has been developed by Sneha and Swathi.
+### For project activities and code commits a git repo was created.
+    Git repo: https://github.com/Sneha-nimmati/Software-Development-group-project
+
 
 
 
