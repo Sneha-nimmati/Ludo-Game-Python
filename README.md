@@ -53,7 +53,10 @@
     
 
 <br/>
+<br>
+
 ### 2. Play With Friends
+<br>
     The second option User can choose is to play with friends. If a user chooses this option, he has to enter number of players to play the game in the input field and start the game. If a user doesnot enters a value between 2 and 4 it displays a message saying please enter values between 2 and 4. if the user enters the correct value and click on start then the ludo board will be launched where the players can start the game.
 <br/>
 
