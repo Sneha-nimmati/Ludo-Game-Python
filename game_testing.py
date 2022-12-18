@@ -30,6 +30,9 @@ class TestLudo(unittest.TestCase):
             assert 0 < len(total_people_play) < 5
 
     def test_startup1(self):
+        '''
+        Tests whether coins are in initial position or not when the game started
+    '''
         six_list = self.app.red_six_list
         list6 = ["first_move"]
         self.assertEqual(six_list,list6)
