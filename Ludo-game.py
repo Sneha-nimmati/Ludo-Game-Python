@@ -9,29 +9,32 @@ from random import randint, choice
 class Ludo:
     def __init__(self, root, six_dice, five_dice, four_dice, three_dice, two_dice,
                  one_dice):
+    
+
         self.window = root
         
         self.make_canvas = Canvas(self.window, bg="#E9C67F", width=800, height=630)
-        self.make_canvas.pack(fill=BOTH, expand=1)
+        self.make_canvas.pack(fill=BOTH, expand=1) # Tkinter canvas used to create rectangular Ludo Board
 
-       
+       #Initialising coins for all colors with empty list
         self.made_red_coin = []
         self.made_green_coin = []
         self.made_yellow_coin = []
         self.made_sky_blue_coin = []
 
+        #Initialising number labels for all colors with an empty list
         self.red_number_label = []
         self.green_number_label = []
         self.yellow_number_label = []
         self.sky_blue_number_label = []
 
-        self.block_value_predict = []
-        self.total_people_play = []
+        self.block_value_predict = [] #storing all the values of all colors like--values, label, Roll button, 1,2,3,4 buttons
+        self.total_people_play = [] #storing number of playing when play with friends is selected
 
         self.block_number_side = [one_dice, two_dice, three_dice, four_dice, five_dice,
-                                   six_dice]
+                                   six_dice] #all dice values store
 
-        
+        #store specific positions of coins of all colors
         self.red_coord_store = [-1, -1, -1, -1]
         self.green_coord_store = [-1, -1, -1, -1]
         self.yellow_coord_store = [-1, -1, -1, -1]
@@ -42,13 +45,14 @@ class Ludo:
         self.yellow_coin_position = [0, 1, 2, 3]
         self.sky_blue_coin_position = [0, 1, 2, 3]
 
+        # initializing all coins positions to -1
         for index in range(len(self.red_coin_position)): 
             self.red_coin_position[index] = -1
             self.green_coin_position[index] = -1
             self.yellow_coin_position[index] = -1
             self.sky_blue_coin_position[index] = -1
 
-       
+        # For respective coins to traverse
         self.move_red_counter = 0
         self.move_green_counter = 0
         self.move_yellow_counter = 0
@@ -57,26 +61,28 @@ class Ludo:
         self.take_permission = 0
         self.six_with_overlap = 0
 
+        #initializing the active coins for each color to zero
         self.red_store_active = 0
         self.sky_blue_store_active = 0
         self.yellow_store_active = 0
-        self.green_store_active = 0
+        self.grwssaeen_store_active = 0
 
         self.six_counter = 0
         self.time_for = -1
 
+        #safe positions at each side
         self.right_star = None
         self.down_star = None
         self.left_star = None
         self.up_star = None
 
-        
-        self.robo_prem = 0
+          
+        self.robo_prem = 0 #variable which indicates robo's turn to play
         self.count_robo_stage_from_start = 0
         self.robo_store = []
 
        
-        self.board_set_up()
+        self.board_set_up() #intial board setup
 
         self.instruction_btn_red()
         self.instruction_btn_sky_blue()
@@ -88,9 +94,22 @@ class Ludo:
 
     def board_set_up(self):
         
+        '''
+        In this method we create the Ludo board 
+
+        First we create the rectangle boxes of all colors,then create all the border lines of play area and square boxes
+        then fill with respective colors wherever necessary
+
+        variable: variable initialised in the __init__ method are used to create the board
+
+        output: A ludo board gets created with 4 different coins, initial positions, safe places,and number labels,
+         play area and final destination area in it.
+        
+        '''
+
         self.make_canvas.create_rectangle(100, 15, 100 + (40 * 15), 15 + (40 * 15), width=6, fill="white")
 
-       
+       #initial place for all coins
         self.make_canvas.create_rectangle(100, 15, 100 + 240, 15 + 240, width=3, fill="red")  # left up large square
         self.make_canvas.create_rectangle(100, (15 + 240) + (40 * 3), 100 + 240, (15 + 240) + (40 * 3) + (40 * 6),
                                           width=3, fill="#04d9ff")  # left down large square
@@ -127,7 +146,7 @@ class Ludo:
         self.make_canvas.create_rectangle(100 + 240 + 40 + 40, (15 + 240) + (40 * 3), 100 + 240 + 40 + 40 + 40,
                                           (15 + 240) + (40 * 3) + (40 * 6), width=3)
 
-        
+        # creating border lines
         start_x = 100 + 40
         start_y = 15 + 240
         end_x = 100 + 40
@@ -167,7 +186,7 @@ class Ludo:
             start_y += 40
             end_y += 40
 
-        
+        # creating play area
         self.make_canvas.create_rectangle(100 + 20, 15 + 40 - 20, 100 + 40 + 60 + 40 + 60 + 20,
                                           15 + 40 + 40 + 40 + 100 - 20, width=3, fill="white")
         self.make_canvas.create_rectangle(340 + (40 * 3) + 40 - 20, 15 + 40 - 20,
@@ -236,7 +255,7 @@ class Ludo:
         self.make_canvas.create_rectangle(100 + (40 * 6) + (40 * 3) + (40 * 4), 15 + (40 * 8),
                                           100 + (40 * 6) + (40 * 3) + (40 * 5), 15 + (40 * 9), fill="yellow", width=3)
 
-       
+        # Destination position for all coins 
         self.make_canvas.create_polygon(100 + 240, 15 + 240, 100 + 240 + 60, 15 + 240 + 60, 100 + 240,
                                         15 + 240 + (40 * 3), width=3, fill="red", outline="black")
         self.make_canvas.create_polygon(100 + 240 + (40 * 3), 15 + 240, 100 + 240 + 60, 15 + 240 + 60,
@@ -248,7 +267,7 @@ class Ludo:
                                         100 + 240 + (40 * 3), 15 + 240 + (40 * 3), width=3, fill="#04d9ff",
                                         outline="black")
 
-        
+        # creating coins and number labels
         red_1_coin = self.make_canvas.create_oval(100 + 40, 15 + 40, 100 + 40 + 40, 15 + 40 + 40, width=3, fill="red",
                                                   outline="black")
         red_2_coin = self.make_canvas.create_oval(100 + 40 + 60 + 60, 15 + 40, 100 + 40 + 60 + 60 + 40, 15 + 40 + 40,
@@ -355,7 +374,7 @@ class Ludo:
         self.made_yellow_coin.append(yellow_3_coin)
         self.made_yellow_coin.append(yellow_4_coin)
 
-        # Make coin under number label for yellow right down block
+        
         yellow_1_label = Label(self.make_canvas, text="1", font=("Arial", 15, "bold"), bg="yellow", fg="black")
         yellow_1_label.place(x=340 + (40 * 3) + 40 + 10, y=30 + (40 * 6) + (40 * 3) + 40 + 10)
         yellow_2_label = Label(self.make_canvas, text="2", font=("Arial", 15, "bold"), bg="yellow", fg="black")
@@ -370,14 +389,14 @@ class Ludo:
         self.yellow_number_label.append(yellow_4_label)
 
       
-        
+        # safe places at 4 sides
         common_x = 340 + (40 * 6) + 20
         common_y = 15 + 240 + 2
         coord = [common_x, common_y, common_x + 5, common_y + 15, common_x + 15, common_y + 15, common_x + 8,
                  common_y + 20, common_x + 15, common_y + 25, common_x + 5, common_y + 25, common_x, common_y + 25 + 10,
                  common_x - 5, common_y + 25, common_x - 16, common_y + 25, common_x - 8, common_y + 15 + 5,
                  common_x - 15, common_y + 15, common_x - 5, common_y + 15]
-        self.make_canvas.create_polygon(coord, width=2, fill="blue")
+        self.make_canvas.create_polygon(coord, width=2, fill="black")
 
         
         common_x = 100 + 240 + 2 + 18
@@ -386,7 +405,7 @@ class Ludo:
                  common_y + 20, common_x + 15, common_y + 25, common_x + 5, common_y + 25, common_x, common_y + 25 + 10,
                  common_x - 5, common_y + 25, common_x - 16, common_y + 25, common_x - 8, common_y + 15 + 5,
                  common_x - 15, common_y + 15, common_x - 5, common_y + 15]
-        self.make_canvas.create_polygon(coord, width=2, fill="blue")
+        self.make_canvas.create_polygon(coord, width=2, fill="black")
 
         
         common_x = 100 + (40 * 2) + 2 + 18
@@ -395,7 +414,7 @@ class Ludo:
                  common_y + 20, common_x + 15, common_y + 25, common_x + 5, common_y + 25, common_x, common_y + 25 + 10,
                  common_x - 5, common_y + 25, common_x - 16, common_y + 25, common_x - 8, common_y + 15 + 5,
                  common_x - 15, common_y + 15, common_x - 5, common_y + 15]
-        self.make_canvas.create_polygon(coord, width=2, fill="blue")
+        self.make_canvas.create_polygon(coord, width=2, fill="black")
 
         
         common_x = 100 + 240 + (40 * 2) + 2 + 18
@@ -404,10 +423,18 @@ class Ludo:
                  common_y + 20, common_x + 15, common_y + 25, common_x + 5, common_y + 25, common_x, common_y + 25 + 10,
                  common_x - 5, common_y + 25, common_x - 16, common_y + 25, common_x - 8, common_y + 15 + 5,
                  common_x - 15, common_y + 15, common_x - 5, common_y + 15]
-        self.make_canvas.create_polygon(coord, width=3, fill="blue")
+        self.make_canvas.create_polygon(coord, width=3, fill="black")
 
     
     def take_initial_control(self):
+        '''
+            In this method we will create intial window where users can choose one of two options available which are play with computer
+            and play with friends
+
+            output: Initial window with play with friends and play with computer button, Input box where users can enter
+                    number of players and a start button
+
+        '''
         for i in range(4):
             self.block_value_predict[i][1]['state'] = DISABLED
             print(self.block_value_predict)
@@ -427,8 +454,15 @@ class Ludo:
         take_entry.place(x=320, y=220)
         take_entry.focus()
 
-        def filtering():
+        def filtering():# Filtering total number of players
+
             def input_filtering(coin_number):
+                '''
+                    Filtering values when number of players is entered in the input box
+
+                    "Displays error message where entered values are not between 2 and 4"
+            
+                '''
                 try:
                     return True if (4 >= int(coin_number) >= 2) or type(coin_number) == int else False
                 except:
@@ -442,13 +476,13 @@ class Ludo:
                 self.make_command()
                 top.destroy()
             else:
-                messagebox.showerror("Input Error", "Please input number of players between 2 and 4")
+                messagebox.showerror("Input Error", "Please enter values between 2 and 4")
                 top.destroy()
                 self.take_initial_control()
 
-        submit_btn = Button(top, text="Submit", bg="#262626", fg="#00FF00", font=("Arial", 13, "bold"), relief=RAISED,
+        start_btn = Button(top, text="Start", bg="#262626", fg="#00FF00", font=("Arial", 13, "bold"), relief=RAISED,
                             bd=3, command=filtering, state=DISABLED)
-        submit_btn.place(x=550, y=220)
+        start_btn.place(x=550, y=220)
 
         def operate(ind):
             if ind:
@@ -464,19 +498,19 @@ class Ludo:
                         command_play.place_forget()
 
                     place_ins['text'] = f"  Your game will start within {time_is} sec"
-                    place_ins.place(x=20, y=220)
+                    place_ins.place(x=100, y=300)
 
                     if time_is > 5:
                         command_play['text'] = f"             Computer will Play With Red coin and the Player will play With Sky Blue Coin"
                     elif time_is >= 2 and time_is < 5:
-                        command_play['text'] = f"                       Player will get the first chance to play the game"
+                        command_play['text'] = f"                           Player will get the first chance to play the game"
                     else:
                         command_play['text'] = f"                                       All the best!!! Enjoy the Game"
-                    command_play.place(x=10, y=260)
+                    command_play.place(x=10, y=350)
 
                 time_is = 10
-                place_ins = Label(top, text="", font=("Arial", 20, "bold"), fg="#FF0000", bg="#141414")
-                command_play = Label(top, text="", font=("Arial", 12, "bold"), fg="#af7439", bg="#141414")
+                place_ins = Label(top, text="", font=("Arial", 20, "bold"), fg="#FF0000", bg="#FFFFFF")
+                command_play = Label(top, text="", font=("Arial", 12, "bold"), fg="#af7439", bg="#FFFFFF")
 
                 try:
                     while time_is:
@@ -489,7 +523,7 @@ class Ludo:
                     print("Force Stop Error in Operate")
                 self.block_value_predict[1][1]['state'] = NORMAL
             else:
-                submit_btn['state'] = NORMAL
+                start_btn['state'] = NORMAL
                 take_entry['state'] = NORMAL
 
         mvc_btn = Button(top, text="Play With Computer", bg="#2B4AF7", fg="#FCFCFD", font=("Times New Roman", 12, "bold"),
@@ -539,7 +573,11 @@ class Ludo:
 
         top.mainloop()
 
-    def make_prediction(self,color_indicator):
+    def make_prediction(self,color_indicator): 
+        '''
+            In this method we get the values of dice when a player rolls the dice and store it.
+        
+        '''
         try:
             if color_indicator == "red":
                 block_value_predict = self.block_value_predict[0]
