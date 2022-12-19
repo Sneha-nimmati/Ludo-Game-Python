@@ -51,12 +51,11 @@
 <<<<<<< HEAD
     If User wants to play with computer he can choose play with computer and start the game. As soon as the player selects play with computer option, a message will be displayed which gives information about the color of the coin that is assigned to computer and to the player. The message also contains the information about who to start the game and the window disappears. Then the Ludo board is lanched where computer and player starts the Game.
 <br/>
-=======
+
 <br>
      If User wants to play with computer he can choose play with computer and start the game. As soon as the player selects play with computer option, a message will be displayed which gives information about the color of the coin that is assigned to computer and to the player. The message also contains the information about who to start the game and the window disappears. Then the Ludo board is lanched where computer and player starts the Game.
     
 
->>>>>>> 31d890804d3e26fd0cdf8f5a3d8054d18fab6ea8
 <br/>
 <br>
 
