@@ -48,10 +48,20 @@
 <br/>
 <br>
 ### 1. Play with Computer
+<<<<<<< HEAD
     If User wants to play with computer he can choose play with computer and start the game. As soon as the player selects play with computer option, a message will be displayed which gives information about the color of the coin that is assigned to computer and to the player. The message also contains the information about who to start the game and the window disappears. Then the Ludo board is lanched where computer and player starts the Game.
 <br/>
+=======
+<br>
+     If User wants to play with computer he can choose play with computer and start the game. As soon as the player selects play with computer option, a message will be displayed which gives information about the color of the coin that is assigned to computer and to the player. The message also contains the information about who to start the game and the window disappears. Then the Ludo board is lanched where computer and player starts the Game.
+    
+
+>>>>>>> 31d890804d3e26fd0cdf8f5a3d8054d18fab6ea8
 <br/>
+<br>
+
 ### 2. Play With Friends
+<br>
     The second option User can choose is to play with friends. If a user chooses this option, he has to enter number of players to play the game in the input field and start the game. If a user doesnot enters a value between 2 and 4 it displays a message saying please enter values between 2 and 4. if the user enters the correct value and click on start then the ludo board will be launched where the players can start the game.
 <br/>
 
