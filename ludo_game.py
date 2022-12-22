@@ -53,6 +53,7 @@ class Ludo:
 
         self.six_tracker = 0
         self.time_for = -1
+        self.six_list = []
 
         # safe positions at each side
         self.right_star = None
@@ -63,6 +64,8 @@ class Ludo:
         self.check_if_bot = 0  # variable which indicates robo's turn to play
         self.count_robo_stage_from_start = 0
         self.robo_store = []
+        self.first_winner = []
+
 
         b = Board(self.make_canvas)
         b.board_set_up()
@@ -164,7 +167,7 @@ class Ludo:
         top.maxsize(800, 600)
         top.minsize(800, 600)
         top.config(bg="white")
-        top.iconbitmap("Images/ludo_icon.ico")
+        top.iconbitmap("../Images/ludo_icon.ico")
 
         head = Label(top, text="-:Total number of players:- ", font=("Arial", 12, "bold", "italic"), bg="orange",
                      fg="chocolate")
@@ -290,7 +293,7 @@ class Ludo:
         off = PhotoImage(file="sound/soff.png")
 
         label1 = Label(top, text="Sound:", font=("Arial", 16, "bold"))
-        label1.place(x=635, y=20)
+        label1.place(x=635, y=2.0)
         on_button = Button(top, image=on, bd=0, command=switch)
         on_button.place(x=720, y=20)
 
@@ -378,6 +381,9 @@ class Ludo:
             self.six_tracker += 1
         else:
             self.six_tracker = 0
+
+        if ((coins_inside == 1 and dice_value == 6)):
+            self.six_list.append("first_move")
 
         if ((coins_inside == 1 and dice_value == 6) or (coins_inside == 0)) and self.six_tracker < 3:
             permission = 1
@@ -1134,6 +1140,7 @@ class Ludo:
         if destination_reached == 1:
             self.destination_coin_tracker += 1
             if self.destination_coin_tracker == 1:
+                self.first_winner = [color_coin,"Winner of the Game"]
                 if self.check_if_bot == 1 and color_coin == "red":
                     messagebox.showinfo("Winner", "Hurrah! I am the winner for this game....")
                 else:
@@ -1370,6 +1377,6 @@ if __name__ == '__main__':
     window.maxsize(800, 630)
     window.minsize(800, 630)
     window.title("Ludo Board Game")
-    window.iconbitmap("Images/ludo_icon.ico")
+    window.iconbitmap("../Images/ludo_icon.ico")
     Ludo(window)
     window.mainloop()
