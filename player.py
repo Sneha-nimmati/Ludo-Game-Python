@@ -52,7 +52,7 @@ class Player():
 
     def coin_buttons(self,color,number,x,y):
         button = Button(self.make_canvas, bg="#262626", fg="#00eb00", text=str(number), font=("Arial", 13, "bold", "italic"),
-                       relief=RAISED, bd=3, command=lambda: self.ludogame.main_controller(color, str(number)), state=DISABLED,
+                       relief=RAISED, bd=3, command=lambda: self.ludogame.game_manager(color, str(number)), state=DISABLED,
                        disabledforeground=color)
         button.place(x=x, y=y)
         print("each_button:",button)
