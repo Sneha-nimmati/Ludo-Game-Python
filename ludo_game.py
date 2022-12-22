@@ -7,38 +7,39 @@ from tkinter import *
 
 
 class Ludo:
-    def __init__(self, root):
+    def __init__(self, window):
 
         from player import Player
-        self.window = root
+        self.window = window
 
-        self.make_canvas = Canvas(self.window, bg="#E9C67F", width=800, height=630)
-        self.make_canvas.pack(fill=BOTH, expand=1)  # Tkinter canvas used to create rectangular Ludo Board
+        self.canvas_game = Canvas(self.window, bg="#E9C67F", width=800, height=630)
+         # Tkinter canvas used to create rectangular Ludo Board
+        self.canvas_game.pack(fill=BOTH, expand=1)
 
         # storing all the values of all colors , label, Roll button, 1,2,3,4 buttons
         self.roll_predict_coins = []
         # storing number of playing when play with friends is selected
         self.total_people_play = []
 
-        self.red_coin_position = [1, 2, 3, 4]
-        self.green_coin_position = [1, 2, 3, 4]
-        self.yellow_coin_position = [1, 2, 3, 4]
-        self.blue_coin_position = [1, 2, 3, 4]
+        self.red_player_pos = [1, 2, 3, 4]
+        self.green_player_pos = [1, 2, 3, 4]
+        self.yellow_player_pos = [1, 2, 3, 4]
+        self.blue_player_pos = [1, 2, 3, 4]
 
         coin_index = 0
         # initializing all coins positions to -1
-        while coin_index < len(self.red_coin_position):
-            self.red_coin_position[coin_index] = -1
-            self.green_coin_position[coin_index] = -1
-            self.yellow_coin_position[coin_index] = -1
-            self.blue_coin_position[coin_index] = -1
+        while coin_index < len(self.red_player_pos):
+            self.red_player_pos[coin_index] = -1
+            self.green_player_pos[coin_index] = -1
+            self.yellow_player_pos[coin_index] = -1
+            self.blue_player_pos[coin_index] = -1
             coin_index+= 1
 
         # bot_coins specific positions of coins of all colors
-        self.red_coord_list = [-1, -1, -1, -1]
-        self.green_coord_list = [-1, -1, -1, -1]
-        self.yellow_coord_list = [-1, -1, -1, -1]
-        self.blue_coord_list = [-1, -1, -1, -1]
+        self.dimensn_red_list = [-1, -1, -1, -1]
+        self.dimensn_green_list = [-1, -1, -1, -1]
+        self.dimensn_yellow_list = [-1, -1, -1, -1]
+        self.dimensn_blue_list = [-1, -1, -1, -1]
         # For respective coins to traverse
         self.red_coin_tracker = 0
         self.green_coin_tracker = 0
@@ -55,7 +56,7 @@ class Ludo:
         self.green_bot_coins_active = 0
 
         self.six_tracker = 0
-        self.time_for = -1
+        self.clock_counter = -1
         self.six_list = []
 
         self.check_if_bot = 0
@@ -70,7 +71,7 @@ class Ludo:
         self.left_star = None
         self.up_star = None
 
-        b = Board(self.make_canvas)
+        b = Board(self.canvas_game)
         b.board_set_up()
         print("board_Setup")
 
@@ -135,7 +136,7 @@ class Ludo:
         b.safe_place()
 
         # creating roll and coin manager buttons
-        roll_btn = Player(self.make_canvas, self)
+        roll_btn = Player(self.canvas_game, self)
         red_roll_btn = roll_btn.dice_roll_move("red", 34, 15, 25, 65)
         blue_roll_btn = roll_btn.dice_roll_move("blue", 34, 385, 25, 435)
         green_roll_btn = roll_btn.dice_roll_move("green", 730, 15, 722, 65)
@@ -195,8 +196,8 @@ class Ludo:
 
             response = input_processing(coin_index_entry.get())
             if response:
-                for player_index in range(int(coin_index_entry.get())):
-                    self.total_people_play.append(player_index)
+                for index_val in range(int(coin_index_entry.get())):
+                    self.total_people_play.append(index_val)
                 print(self.total_people_play)
                 self.player_bot_manager()
                 top.destroy()
@@ -212,37 +213,37 @@ class Ludo:
         def select(value):
             if value:
                 self.check_if_bot = 1
-                for player_index in range(2):
-                    self.total_people_play.append(player_index)
+                for index_val in range(2):
+                    self.total_people_play.append(index_val)
                 print(self.total_people_play)
 
-                def display_start_message(time_is):
-                    if place_ins['text'] != "":
-                        place_ins.place_forget()
-                    if command_play['text'] != "":
-                        command_play.place_forget()
+                def display_start_message(start_time):
+                    if dmnsn_list['text'] != "":
+                        dmnsn_list.place_forget()
+                    if instructn_list['text'] != "":
+                        instructn_list.place_forget()
 
-                    place_ins['text'] = f"  Your game will start within {time_is} sec"
-                    place_ins.place(x=100, y=300)
+                    dmnsn_list['text'] = f"  Your game will start within {start_time} sec"
+                    dmnsn_list.place(x=100, y=300)
 
-                    if time_is > 5:
-                        command_play[
+                    if start_time > 5:
+                        instructn_list[
                             'text'] = f"             Computer will Play With Red coin and the Player will play With Sky Blue Coin"
-                    elif time_is >= 2 and time_is < 5:
-                        command_play[
+                    elif start_time >= 2 and start_time < 5:
+                        instructn_list[
                             'text'] = f"                           Player will get the first chance to play the game"
                     else:
-                        command_play['text'] = f"                                       All the best!!! Enjoy the Game"
-                    command_play.place(x=10, y=350)
+                        instructn_list['text'] = f"                                       All the best!!! Enjoy the Game"
+                    instructn_list.place(x=10, y=350)
 
-                time_is = 10
-                place_ins = Label(top, text="", font=("Arial", 20, "bold"), fg="#FF0000", bg="#FFFFFF")
-                command_play = Label(top, text="", font=("Arial", 12, "bold"), fg="#af7439", bg="#FFFFFF")
+                start_time = 10
+                dmnsn_list = Label(top, text="", font=("Arial", 20, "bold"), fg="#FF0000", bg="#FFFFFF")
+                instructn_list = Label(top, text="", font=("Arial", 12, "bold"), fg="#af7439", bg="#FFFFFF")
 
                 try:
-                    while time_is:
-                        display_start_message(time_is)
-                        time_is -= 1
+                    while start_time:
+                        display_start_message(start_time)
+                        start_time -= 1
                         self.window.update()
                         time.sleep(1)
                     top.destroy()
@@ -325,7 +326,7 @@ class Ludo:
                 print("blue_block:", roll_predict_coins)
                 dice_value = self.blue_coin_tracker = randint(1, 6)
                 if self.check_if_bot and dice_value == 6:
-                    for coin_loc in self.red_coin_position:
+                    for coin_loc in self.red_player_pos:
                         if coin_loc >= 40 and coin_loc <= 46:
                             dice_value = self.blue_coin_tracker = randint(1, 5)
                             break
@@ -364,13 +365,13 @@ class Ludo:
                                             roll_predict_coins):
         bot_parameter = None
         if player_coin == "red":
-            crnt_val_coin_position = self.red_coin_position
+            crnt_val_coin_position = self.red_player_pos
         elif player_coin == "green":
-            crnt_val_coin_position = self.green_coin_position
+            crnt_val_coin_position = self.green_player_pos
         elif player_coin == "yellow":
-            crnt_val_coin_position = self.yellow_coin_position
+            crnt_val_coin_position = self.yellow_player_pos
         else:
-            crnt_val_coin_position = self.blue_coin_position
+            crnt_val_coin_position = self.blue_player_pos
 
         coins_inside = 1
         for i in range(4):
@@ -392,17 +393,17 @@ class Ludo:
                 and self.six_tracker < 3:
             allow = 1
             if player_coin == "red":
-                crnt_val = self.red_coord_list
+                crnt_val = self.dimensn_red_list
             elif player_coin == "green":
-                crnt_val = self.green_coord_list
+                crnt_val = self.dimensn_green_list
             elif player_coin == "yellow":
-                crnt_val = self.yellow_coord_list
+                crnt_val = self.dimensn_yellow_list
             else:
-                crnt_val = self.blue_coord_list
+                crnt_val = self.dimensn_blue_list
 
             if dice_value < 6:
                 if self.turn_after_six == 1:
-                    self.time_for -= 1
+                    self.clock_counter -= 1
                     self.turn_after_six = 0
                 for i in range(4):
                     if crnt_val[i] == -1:
@@ -439,13 +440,13 @@ class Ludo:
         else:
             roll_predict_coins[1]['state'] = NORMAL  # Predict btn activation
             if self.turn_after_six == 1:
-                self.time_for -= 1
+                self.clock_counter -= 1
                 self.turn_after_six = 0
             self.player_bot_manager()
 
         if dice_value == 6 and self.six_tracker < 3 and \
                 roll_predict_coins[2][0]['state'] == NORMAL:
-            self.time_for -= 1
+            self.clock_counter -= 1
         else:
             self.six_tracker = 0
 
@@ -454,17 +455,17 @@ class Ludo:
 
     # Player Scope controller
     def player_bot_manager(self, bot_parameter=None):
-        if self.time_for == -1:
+        if self.clock_counter == -1:
             pass
         else:
-            self.roll_predict_coins[self.total_people_play[self.time_for]][1]['state'] = DISABLED
-        if self.time_for == len(self.total_people_play) - 1:
-            self.time_for = -1
+            self.roll_predict_coins[self.total_people_play[self.clock_counter]][1]['state'] = DISABLED
+        if self.clock_counter == len(self.total_people_play) - 1:
+            self.clock_counter = -1
 
-        self.time_for += 1
-        self.roll_predict_coins[self.total_people_play[self.time_for]][1]['state'] = NORMAL
+        self.clock_counter += 1
+        self.roll_predict_coins[self.total_people_play[self.clock_counter]][1]['state'] = NORMAL
 
-        if self.check_if_bot == 1 and self.time_for == 0:
+        if self.check_if_bot == 1 and self.clock_counter == 0:
             bot_parameter = "Roll"
         if bot_parameter:
             self.bot_operations(bot_parameter)
@@ -485,24 +486,24 @@ class Ludo:
             self.coin_buttons_manager(self.roll_predict_coins[0][2], 0)
 
             if self.red_coin_tracker == 106:
-                messagebox.showwarning("Woohoo!Coin Reached Home. ")
+                messagebox.showwarning("Woohoo! Coin Reached Home. ")
 
-            elif self.red_coin_position[int(coin_number) - 1] == -1 and self.red_coin_tracker == 6:
+            elif self.red_player_pos[int(coin_number) - 1] == -1 and self.red_coin_tracker == 6:
                 self.initial_position_red(coin_number)
-                self.red_coord_list[int(coin_number) - 1] = 1
+                self.dimensn_red_list[int(coin_number) - 1] = 1
 
-            elif self.red_coin_position[int(coin_number) - 1] > -1:
-                coin_index_coord = self.make_canvas.coords(self.graphical_red_coin[int(coin_number) - 1])
+            elif self.red_player_pos[int(coin_number) - 1] > -1:
+                coin_index_coord = self.canvas_game.coords(self.graphical_red_coin[int(coin_number) - 1])
                 red_start_label_x = coin_index_coord[0] + 10
                 red_start_label_y = coin_index_coord[1] + 5
                 self.label_red_coin[int(coin_number) - 1].place(x=red_start_label_x, y=red_start_label_y)
 
-                if self.red_coin_position[int(coin_number) - 1] + self.red_coin_tracker <= 106:
-                    self.red_coin_position[int(coin_number) - 1] = self.coin_traversal(
-                        self.red_coin_position[int(coin_number) - 1], self.graphical_red_coin[int(coin_number) - 1],
+                if self.red_player_pos[int(coin_number) - 1] + self.red_coin_tracker <= 106:
+                    self.red_player_pos[int(coin_number) - 1] = self.coin_traversal(
+                        self.red_player_pos[int(coin_number) - 1], self.graphical_red_coin[int(coin_number) - 1],
                         self.label_red_coin[int(coin_number) - 1], red_start_label_x, red_start_label_y, "red",
                         self.red_coin_tracker)
-                    if self.check_if_bot and self.red_coin_position[
+                    if self.check_if_bot and self.red_player_pos[
                         int(coin_number) - 1] == 106 and color_coin == "red":
                         self.robo_bot_coins.remove(int(coin_number))
                         print("After removing: ", self.robo_bot_coins)
@@ -516,20 +517,20 @@ class Ludo:
                         bot_parameter = "give"
                         self.bot_operations(bot_parameter)
                     return
-                if self.red_coin_position[int(coin_number) - 1] == 22 or self.red_coin_position[
-                    int(coin_number) - 1] == 9 or self.red_coin_position[int(coin_number) - 1] == 48 or \
-                        self.red_coin_position[int(coin_number) - 1] == 35 or self.red_coin_position[
-                    int(coin_number) - 1] == 14 or self.red_coin_position[int(coin_number) - 1] == 27 or \
-                        self.red_coin_position[int(coin_number) - 1] == 40 or self.red_coin_position[
+                if self.red_player_pos[int(coin_number) - 1] == 22 or self.red_player_pos[
+                    int(coin_number) - 1] == 9 or self.red_player_pos[int(coin_number) - 1] == 48 or \
+                        self.red_player_pos[int(coin_number) - 1] == 35 or self.red_player_pos[
+                    int(coin_number) - 1] == 14 or self.red_player_pos[int(coin_number) - 1] == 27 or \
+                        self.red_player_pos[int(coin_number) - 1] == 40 or self.red_player_pos[
                     int(coin_number) - 1] == 1:
                     pass
 
                 else:
-                    if self.red_coin_position[int(coin_number) - 1] < 100:
-                        self.player_elimination(self.red_coin_position[int(coin_number) - 1], color_coin,
+                    if self.red_player_pos[int(coin_number) - 1] < 100:
+                        self.player_elimination(self.red_player_pos[int(coin_number) - 1], color_coin,
                                                 self.red_coin_tracker)
 
-                self.red_coord_list[int(coin_number) - 1] = self.red_coin_position[int(coin_number) - 1]
+                self.dimensn_red_list[int(coin_number) - 1] = self.red_player_pos[int(coin_number) - 1]
             else:
                 messagebox.showerror("Incorrect Selection of Coin to Traverse ")
                 self.coin_buttons_manager(self.roll_predict_coins[0][2])
@@ -547,19 +548,19 @@ class Ludo:
             if self.yellow_coin_tracker == 106:
                 messagebox.showwarning("Woohoo!Coin Reached Home. ")
 
-            elif self.yellow_coin_position[int(coin_number) - 1] == -1 and self.yellow_coin_tracker == 6:
+            elif self.yellow_player_pos[int(coin_number) - 1] == -1 and self.yellow_coin_tracker == 6:
                 self.initial_position_yellow(coin_number)
-                self.yellow_coord_list[int(coin_number) - 1] = 27
+                self.dimensn_yellow_list[int(coin_number) - 1] = 27
 
-            elif self.yellow_coin_position[int(coin_number) - 1] > -1:
-                coin_index_coord = self.make_canvas.coords(self.graphical_yellow_coin[int(coin_number) - 1])
+            elif self.yellow_player_pos[int(coin_number) - 1] > -1:
+                coin_index_coord = self.canvas_game.coords(self.graphical_yellow_coin[int(coin_number) - 1])
                 yellow_start_label_x = coin_index_coord[0] + 10
                 yellow_start_label_y = coin_index_coord[1] + 5
                 self.label_yellow_coin[int(coin_number) - 1].place(x=yellow_start_label_x, y=yellow_start_label_y)
 
-                if self.yellow_coin_position[int(coin_number) - 1] + self.yellow_coin_tracker <= 106:
-                    self.yellow_coin_position[int(coin_number) - 1] = self.coin_traversal(
-                        self.yellow_coin_position[int(coin_number) - 1],
+                if self.yellow_player_pos[int(coin_number) - 1] + self.yellow_coin_tracker <= 106:
+                    self.yellow_player_pos[int(coin_number) - 1] = self.coin_traversal(
+                        self.yellow_player_pos[int(coin_number) - 1],
                         self.graphical_yellow_coin[int(coin_number) - 1], self.label_yellow_coin[int(coin_number) - 1],
                         yellow_start_label_x, yellow_start_label_y, "yellow", self.yellow_coin_tracker)
                 else:
@@ -568,19 +569,19 @@ class Ludo:
                     self.coin_buttons_manager(self.roll_predict_coins[2][2])
                     return
 
-                if self.yellow_coin_position[int(coin_number) - 1] == 22 or self.yellow_coin_position[
-                    int(coin_number) - 1] == 9 or self.yellow_coin_position[int(coin_number) - 1] == 48 or \
-                        self.yellow_coin_position[int(coin_number) - 1] == 35 or self.yellow_coin_position[
-                    int(coin_number) - 1] == 1 or self.yellow_coin_position[int(coin_number) - 1] == 14 or \
-                        self.yellow_coin_position[int(coin_number) - 1] == 40 or self.yellow_coin_position[
+                if self.yellow_player_pos[int(coin_number) - 1] == 22 or self.yellow_player_pos[
+                    int(coin_number) - 1] == 9 or self.yellow_player_pos[int(coin_number) - 1] == 48 or \
+                        self.yellow_player_pos[int(coin_number) - 1] == 35 or self.yellow_player_pos[
+                    int(coin_number) - 1] == 1 or self.yellow_player_pos[int(coin_number) - 1] == 14 or \
+                        self.yellow_player_pos[int(coin_number) - 1] == 40 or self.yellow_player_pos[
                     int(coin_number) - 1] == 27:
                     pass
                 else:
-                    if self.yellow_coin_position[int(coin_number) - 1] < 100:
-                        self.player_elimination(self.yellow_coin_position[int(coin_number) - 1], color_coin,
+                    if self.yellow_player_pos[int(coin_number) - 1] < 100:
+                        self.player_elimination(self.yellow_player_pos[int(coin_number) - 1], color_coin,
                                                 self.yellow_coin_tracker)
 
-                self.yellow_coord_list[int(coin_number) - 1] = self.yellow_coin_position[int(coin_number) - 1]
+                self.dimensn_yellow_list[int(coin_number) - 1] = self.yellow_player_pos[int(coin_number) - 1]
 
             else:
                 messagebox.showerror("Wrong choice", "Sorry, This coin in not permitted to travel now")
@@ -595,21 +596,21 @@ class Ludo:
             if self.red_coin_tracker == 106:
                 messagebox.showwarning("Woohoo!Coin Reached Home. ")
 
-            elif self.blue_coin_position[int(coin_number) - 1] == -1 and self.blue_coin_tracker == 6:
+            elif self.blue_player_pos[int(coin_number) - 1] == -1 and self.blue_coin_tracker == 6:
                 self.initial_position_blue(coin_number)
-                self.blue_coord_list[int(coin_number) - 1] = 40
+                self.dimensn_blue_list[int(coin_number) - 1] = 40
 
-            elif self.blue_coin_position[int(coin_number) - 1] > -1:
-                coin_index_coord = self.make_canvas.coords(self.graphical_blue_coin[int(coin_number) - 1])
+            elif self.blue_player_pos[int(coin_number) - 1] > -1:
+                coin_index_coord = self.canvas_game.coords(self.graphical_blue_coin[int(coin_number) - 1])
                 print("coin_index_coord:", coin_index_coord)
                 blue_start_label_x = coin_index_coord[0] + 10
                 blue_start_label_y = coin_index_coord[1] + 5
                 self.label_blue_coin[int(coin_number) - 1].place(x=blue_start_label_x,
                                                                  y=blue_start_label_y)
 
-                if self.blue_coin_position[int(coin_number) - 1] + self.blue_coin_tracker <= 106:
-                    self.blue_coin_position[int(coin_number) - 1] = self.coin_traversal(
-                        self.blue_coin_position[int(coin_number) - 1],
+                if self.blue_player_pos[int(coin_number) - 1] + self.blue_coin_tracker <= 106:
+                    self.blue_player_pos[int(coin_number) - 1] = self.coin_traversal(
+                        self.blue_player_pos[int(coin_number) - 1],
                         self.graphical_blue_coin[int(coin_number) - 1], self.label_blue_coin[int(coin_number) - 1],
                         blue_start_label_x, blue_start_label_y, "blue", self.blue_coin_tracker)
                 else:
@@ -617,19 +618,19 @@ class Ludo:
                     self.coin_buttons_manager(self.roll_predict_coins[1][2])
                     return
 
-                if self.blue_coin_position[int(coin_number) - 1] == 22 or self.blue_coin_position[
-                    int(coin_number) - 1] == 9 or self.blue_coin_position[int(coin_number) - 1] == 48 or \
-                        self.blue_coin_position[int(coin_number) - 1] == 35 or self.blue_coin_position[
-                    int(coin_number) - 1] == 1 or self.blue_coin_position[int(coin_number) - 1] == 14 or \
-                        self.blue_coin_position[int(coin_number) - 1] == 27 or self.blue_coin_position[
+                if self.blue_player_pos[int(coin_number) - 1] == 22 or self.blue_player_pos[
+                    int(coin_number) - 1] == 9 or self.blue_player_pos[int(coin_number) - 1] == 48 or \
+                        self.blue_player_pos[int(coin_number) - 1] == 35 or self.blue_player_pos[
+                    int(coin_number) - 1] == 1 or self.blue_player_pos[int(coin_number) - 1] == 14 or \
+                        self.blue_player_pos[int(coin_number) - 1] == 27 or self.blue_player_pos[
                     int(coin_number) - 1] == 40:
                     pass
                 else:
-                    if self.blue_coin_position[int(coin_number) - 1] < 100:
-                        self.player_elimination(self.blue_coin_position[int(coin_number) - 1], color_coin,
+                    if self.blue_player_pos[int(coin_number) - 1] < 100:
+                        self.player_elimination(self.blue_player_pos[int(coin_number) - 1], color_coin,
                                                 self.blue_coin_tracker)
 
-                self.blue_coord_list[int(coin_number) - 1] = self.blue_coin_position[int(coin_number) - 1]
+                self.dimensn_blue_list[int(coin_number) - 1] = self.blue_player_pos[int(coin_number) - 1]
 
             else:
                 messagebox.showerror("Wrong choice", "Sorry, This coin in not permitted to travel now")
@@ -643,19 +644,19 @@ class Ludo:
             if self.green_coin_tracker == 106:
                 messagebox.showwarning("Destination reached", "Reached at the destination")
 
-            elif self.green_coin_position[int(coin_number) - 1] == -1 and self.green_coin_tracker == 6:
+            elif self.green_player_pos[int(coin_number) - 1] == -1 and self.green_coin_tracker == 6:
                 self.initial_position_green(coin_number)
-                self.green_coord_list[int(coin_number) - 1] = 14
+                self.dimensn_green_list[int(coin_number) - 1] = 14
 
-            elif self.green_coin_position[int(coin_number) - 1] > -1:
-                coin_index_coord = self.make_canvas.coords(self.graphical_green_coin[int(coin_number) - 1])
+            elif self.green_player_pos[int(coin_number) - 1] > -1:
+                coin_index_coord = self.canvas_game.coords(self.graphical_green_coin[int(coin_number) - 1])
                 green_start_label_x = coin_index_coord[0] + 10
                 green_start_label_y = coin_index_coord[1] + 5
                 self.label_green_coin[int(coin_number) - 1].place(x=green_start_label_x, y=green_start_label_y)
 
-                if self.green_coin_position[int(coin_number) - 1] + self.green_coin_tracker <= 106:
-                    self.green_coin_position[int(coin_number) - 1] = self.coin_traversal(
-                        self.green_coin_position[int(coin_number) - 1], self.graphical_green_coin[int(coin_number) - 1],
+                if self.green_player_pos[int(coin_number) - 1] + self.green_coin_tracker <= 106:
+                    self.green_player_pos[int(coin_number) - 1] = self.coin_traversal(
+                        self.green_player_pos[int(coin_number) - 1], self.graphical_green_coin[int(coin_number) - 1],
                         self.label_green_coin[int(coin_number) - 1], green_start_label_x, green_start_label_y,
                         "green", self.green_coin_tracker)
                 else:
@@ -663,19 +664,19 @@ class Ludo:
                     self.coin_buttons_manager(self.roll_predict_coins[3][2])
                     return
 
-                if self.green_coin_position[int(coin_number) - 1] == 22 or self.green_coin_position[
-                    int(coin_number) - 1] == 9 or self.green_coin_position[int(coin_number) - 1] == 48 or \
-                        self.green_coin_position[int(coin_number) - 1] == 35 or self.green_coin_position[
-                    int(coin_number) - 1] == 1 or self.green_coin_position[int(coin_number) - 1] == 27 or \
-                        self.green_coin_position[int(coin_number) - 1] == 40 or self.green_coin_position[
+                if self.green_player_pos[int(coin_number) - 1] == 22 or self.green_player_pos[
+                    int(coin_number) - 1] == 9 or self.green_player_pos[int(coin_number) - 1] == 48 or \
+                        self.green_player_pos[int(coin_number) - 1] == 35 or self.green_player_pos[
+                    int(coin_number) - 1] == 1 or self.green_player_pos[int(coin_number) - 1] == 27 or \
+                        self.green_player_pos[int(coin_number) - 1] == 40 or self.green_player_pos[
                     int(coin_number) - 1] == 14:
                     pass
                 else:
-                    if self.green_coin_position[int(coin_number) - 1] < 100:
-                        self.player_elimination(self.green_coin_position[int(coin_number) - 1], color_coin,
+                    if self.green_player_pos[int(coin_number) - 1] < 100:
+                        self.player_elimination(self.green_player_pos[int(coin_number) - 1], color_coin,
                                                 self.green_coin_tracker)
 
-                self.green_coord_list[int(coin_number) - 1] = self.green_coin_position[int(coin_number) - 1]
+                self.dimensn_green_list[int(coin_number) - 1] = self.green_player_pos[int(coin_number) - 1]
 
             else:
                 messagebox.showerror("Wrong choice", "Sorry, Your coin in not permitted to travel")
@@ -684,31 +685,31 @@ class Ludo:
 
             self.roll_predict_coins[3][1]['state'] = NORMAL
 
-        print(self.red_coord_list)
-        print(self.green_coord_list)
-        print(self.yellow_coord_list)
-        print(self.blue_coord_list)
+        print(self.dimensn_red_list)
+        print(self.dimensn_green_list)
+        print(self.dimensn_yellow_list)
+        print(self.dimensn_blue_list)
         if self.check_if_bot == 1:
             print("Robo bot_coins is: ", self.robo_bot_coins)
 
         allow_granted_to_proceed = True
 
-        if color_coin == "red" and self.red_coin_position[int(coin_number) - 1] == 106:
+        if color_coin == "red" and self.red_player_pos[int(coin_number) - 1] == 106:
             allow_granted_to_proceed = self.check_winner_and_runner(color_coin)
-        elif color_coin == "green" and self.green_coin_position[int(coin_number) - 1] == 106:
+        elif color_coin == "green" and self.green_player_pos[int(coin_number) - 1] == 106:
             allow_granted_to_proceed = self.check_winner_and_runner(color_coin)
-        elif color_coin == "yellow" and self.yellow_coin_position[int(coin_number) - 1] == 106:
+        elif color_coin == "yellow" and self.yellow_player_pos[int(coin_number) - 1] == 106:
             allow_granted_to_proceed = self.check_winner_and_runner(color_coin)
-        elif color_coin == "blue" and self.blue_coin_position[int(coin_number) - 1] == 106:
+        elif color_coin == "blue" and self.blue_player_pos[int(coin_number) - 1] == 106:
             allow_granted_to_proceed = self.check_winner_and_runner(color_coin)
 
         if allow_granted_to_proceed:
             self.player_bot_manager(bot_parameter)
 
     def initial_position_red(self, coin_number):
-        self.make_canvas.delete(self.graphical_red_coin[int(coin_number) - 1])
+        self.canvas_game.delete(self.graphical_red_coin[int(coin_number) - 1])
         self.graphical_red_coin[int(coin_number) - 1] = \
-            self.make_canvas.create_oval(100 + 40, 15 + (40 * 6),
+            self.canvas_game.create_oval(100 + 40, 15 + (40 * 6),
                                          100 + 40 + 40,
                                          15 + (40 * 6) + 40, fill="red",
                                          width=3,
@@ -719,13 +720,13 @@ class Ludo:
         red_start_label_y = 15 + (40 * 6) + 5
         self.label_red_coin[int(coin_number) - 1].place(x=red_start_label_x, y=red_start_label_y)
 
-        self.red_coin_position[int(coin_number) - 1] = 1
+        self.red_player_pos[int(coin_number) - 1] = 1
         self.window.update()
         time.sleep(0.2)
 
     def initial_position_yellow(self, coin_number):
-        self.make_canvas.delete(self.graphical_yellow_coin[int(coin_number) - 1])
-        self.graphical_yellow_coin[int(coin_number) - 1] = self.make_canvas.create_oval(
+        self.canvas_game.delete(self.graphical_yellow_coin[int(coin_number) - 1])
+        self.graphical_yellow_coin[int(coin_number) - 1] = self.canvas_game.create_oval(
             100 + (40 * 6) + (40 * 3) + (40 * 4),
             15 + (40 * 8),
             100 + (40 * 6) + (40 * 3) + (40 * 5),
@@ -737,13 +738,13 @@ class Ludo:
         yellow_start_label_y = 15 + (40 * 8) + 5
         self.label_yellow_coin[int(coin_number) - 1].place(x=yellow_start_label_x, y=yellow_start_label_y)
 
-        self.yellow_coin_position[int(coin_number) - 1] = 27
+        self.yellow_player_pos[int(coin_number) - 1] = 27
         self.window.update()
         time.sleep(0.2)
 
     def initial_position_green(self, coin_number):
-        self.make_canvas.delete(self.graphical_green_coin[int(coin_number) - 1])
-        self.graphical_green_coin[int(coin_number) - 1] = self.make_canvas.create_oval(100 + (40 * 8), 15 + 40,
+        self.canvas_game.delete(self.graphical_green_coin[int(coin_number) - 1])
+        self.graphical_green_coin[int(coin_number) - 1] = self.canvas_game.create_oval(100 + (40 * 8), 15 + 40,
                                                                                        100 + (40 * 9), 15 + 40 + 40,
                                                                                        fill="#00FF00", width=3)
 
@@ -752,14 +753,14 @@ class Ludo:
         green_start_label_y = 15 + 40 + 5
         self.label_green_coin[int(coin_number) - 1].place(x=green_start_label_x, y=green_start_label_y)
 
-        self.green_coin_position[int(coin_number) - 1] = 14
+        self.green_player_pos[int(coin_number) - 1] = 14
         self.window.update()
         time.sleep(0.2)
 
     def initial_position_blue(self, coin_number):
         print("graphical_blue_coin:", self.graphical_blue_coin)
-        self.make_canvas.delete(self.graphical_blue_coin[int(coin_number) - 1])
-        self.graphical_blue_coin[int(coin_number) - 1] = self.make_canvas.create_oval(100 + 240, 340 + (40 * 5) - 5,
+        self.canvas_game.delete(self.graphical_blue_coin[int(coin_number) - 1])
+        self.graphical_blue_coin[int(coin_number) - 1] = self.canvas_game.create_oval(100 + 240, 340 + (40 * 5) - 5,
                                                                                       100 + 240 + 40,
                                                                                       340 + (40 * 6) - 5,
                                                                                       fill="#04d9ff", width=3)
@@ -769,7 +770,7 @@ class Ludo:
         blue_start_label_y = 340 + (40 * 5) - 5 + 5
         self.label_blue_coin[int(coin_number) - 1].place(x=blue_start_label_x, y=blue_start_label_y)
 
-        self.blue_coin_position[int(coin_number) - 1] = 40
+        self.blue_player_pos[int(coin_number) - 1] = 40
         self.window.update()
         time.sleep(0.2)
 
@@ -804,7 +805,7 @@ class Ludo:
                         if dice_value == 6:
                             self.turn_after_six = 1
                         else:
-                            self.time_for -= 1
+                            self.clock_counter -= 1
                     break
 
                 coin_position += 1
@@ -814,59 +815,59 @@ class Ludo:
                 print(coin_position)
 
                 if coin_position <= 5:
-                    self.make_canvas.move(current_coin, 40, 0)
+                    self.canvas_game.move(current_coin, 40, 0)
                     coin_num_label_x += 40
                 elif coin_position == 6:
-                    self.make_canvas.move(current_coin, 40, -40)
+                    self.canvas_game.move(current_coin, 40, -40)
                     coin_num_label_x += 40
                     coin_num_label_y -= 40
                 elif 6 < coin_position <= 11:
-                    self.make_canvas.move(current_coin, 0, -40)
+                    self.canvas_game.move(current_coin, 0, -40)
                     coin_num_label_y -= 40
                 elif coin_position <= 13:
-                    self.make_canvas.move(current_coin, 40, 0)
+                    self.canvas_game.move(current_coin, 40, 0)
                     coin_num_label_x += 40
                 elif coin_position <= 18:
-                    self.make_canvas.move(current_coin, 0, 40)
+                    self.canvas_game.move(current_coin, 0, 40)
                     coin_num_label_y += 40
                 elif coin_position == 19:
-                    self.make_canvas.move(current_coin, 40, 40)
+                    self.canvas_game.move(current_coin, 40, 40)
                     coin_num_label_x += 40
                     coin_num_label_y += 40
                 elif coin_position <= 24:
-                    self.make_canvas.move(current_coin, 40, 0)
+                    self.canvas_game.move(current_coin, 40, 0)
                     coin_num_label_x += 40
                 elif coin_position <= 26:
-                    self.make_canvas.move(current_coin, 0, 40)
+                    self.canvas_game.move(current_coin, 0, 40)
                     coin_num_label_y += 40
                 elif coin_position <= 31:
-                    self.make_canvas.move(current_coin, -40, 0)
+                    self.canvas_game.move(current_coin, -40, 0)
                     coin_num_label_x -= 40
                 elif coin_position == 32:
-                    self.make_canvas.move(current_coin, -40, 40)
+                    self.canvas_game.move(current_coin, -40, 40)
                     coin_num_label_x -= 40
                     coin_num_label_y += 40
                 elif coin_position <= 37:
-                    self.make_canvas.move(current_coin, 0, 40)
+                    self.canvas_game.move(current_coin, 0, 40)
                     coin_num_label_y += 40
                 elif coin_position <= 39:
-                    self.make_canvas.move(current_coin, -40, 0)
+                    self.canvas_game.move(current_coin, -40, 0)
                     coin_num_label_x -= 40
                 elif coin_position <= 44:
-                    self.make_canvas.move(current_coin, 0, -40)
+                    self.canvas_game.move(current_coin, 0, -40)
                     coin_num_label_y -= 40
                 elif coin_position == 45:
-                    self.make_canvas.move(current_coin, -40, -40)
+                    self.canvas_game.move(current_coin, -40, -40)
                     coin_num_label_x -= 40
                     coin_num_label_y -= 40
                 elif coin_position <= 50:
-                    self.make_canvas.move(current_coin, -40, 0)
+                    self.canvas_game.move(current_coin, -40, 0)
                     coin_num_label_x -= 40
                 elif 50 < coin_position <= 52:
-                    self.make_canvas.move(current_coin, 0, -40)
+                    self.canvas_game.move(current_coin, 0, -40)
                     coin_num_label_y -= 40
                 elif coin_position == 53:
-                    self.make_canvas.move(current_coin, 40, 0)
+                    self.canvas_game.move(current_coin, 40, 0)
                     coin_num_label_x += 40
                     coin_position = 1
 
@@ -912,7 +913,7 @@ class Ludo:
         while dice_value > 0:
             current_pos += 1
             dice_value -= 1
-            self.make_canvas.move(current_coin, 0, -40)
+            self.canvas_game.move(current_coin, 0, -40)
             coin_num_label_y -= 40
             coin_num_label.place(x=coin_num_label_x, y=coin_num_label_y)
             self.window.update()
@@ -924,7 +925,7 @@ class Ludo:
         while dice_value > 0:
             current_pos += 1
             dice_value -= 1
-            self.make_canvas.move(current_coin, 0, 40)
+            self.canvas_game.move(current_coin, 0, 40)
             coin_num_label_y += 40
             coin_num_label.place(x=coin_num_label_x, y=coin_num_label_y)
             self.window.update()
@@ -936,7 +937,7 @@ class Ludo:
         while dice_value > 0:
             current_pos += 1
             dice_value -= 1
-            self.make_canvas.move(current_coin, 40, 0)
+            self.canvas_game.move(current_coin, 40, 0)
             coin_num_label_x += 40
             coin_num_label.place(x=coin_num_label_x, y=coin_num_label_y)
             self.window.update()
@@ -948,7 +949,7 @@ class Ludo:
         while dice_value > 0:
             current_pos += 1
             dice_value -= 1
-            self.make_canvas.move(current_coin, -40, 0)
+            self.canvas_game.move(current_coin, -40, 0)
             coin_num_label_x -= 40
             coin_num_label.place(x=coin_num_label_x, y=coin_num_label_y)
             self.window.update()
@@ -959,39 +960,39 @@ class Ludo:
 
     def player_elimination(self, coin_position, coin_color, path_to_traverse_before_overlap):
         if coin_color != "red":
-            for coin_index_coin_number in range(len(self.red_coord_list)):
-                if self.red_coord_list[coin_index_coin_number] == coin_position:
+            for coin_index_coin_number in range(len(self.dimensn_red_list)):
+                if self.dimensn_red_list[coin_index_coin_number] == coin_position:
                     if path_to_traverse_before_overlap == 6:
                         self.turn_after_six = 1
                     else:
-                        self.time_for -= 1
+                        self.clock_counter -= 1
 
-                    self.make_canvas.delete(self.graphical_red_coin[coin_index_coin_number])
+                    self.canvas_game.delete(self.graphical_red_coin[coin_index_coin_number])
                     self.label_red_coin[coin_index_coin_number].place_forget()
-                    self.red_coin_position[coin_index_coin_number] = -1
-                    self.red_coord_list[coin_index_coin_number] = -1
+                    self.red_player_pos[coin_index_coin_number] = -1
+                    self.dimensn_red_list[coin_index_coin_number] = -1
                     if self.check_if_bot == 1:
                         self.robo_bot_coins.remove(coin_index_coin_number + 1)
-                        if self.red_coin_position.count(-1) >= 1:
+                        if self.red_player_pos.count(-1) >= 1:
                             self.count_robo_stage_from_start = 2
 
                     if coin_index_coin_number == 0:
-                        coin_recreate = self.make_canvas.create_oval(100 + 40, 15 + 40, 100 + 40 + 40, 15 + 40 + 40,
+                        coin_recreate = self.canvas_game.create_oval(100 + 40, 15 + 40, 100 + 40 + 40, 15 + 40 + 40,
                                                                      width=3, fill="red", outline="black")
                         self.label_red_coin[coin_index_coin_number].place(x=100 + 40 + 10, y=15 + 40 + 5)
                     elif coin_index_coin_number == 1:
-                        coin_recreate = self.make_canvas.create_oval(100 + 40 + 60 + 60, 15 + 40,
+                        coin_recreate = self.canvas_game.create_oval(100 + 40 + 60 + 60, 15 + 40,
                                                                      100 + 40 + 60 + 60 + 40,
                                                                      15 + 40 + 40, width=3, fill="red", outline="black")
                         self.label_red_coin[coin_index_coin_number].place(x=100 + 40 + 60 + 60 + 10, y=15 + 40 + 5)
                     elif coin_index_coin_number == 2:
-                        coin_recreate = self.make_canvas.create_oval(100 + 40 + 60 + 60, 15 + 40 + 100,
+                        coin_recreate = self.canvas_game.create_oval(100 + 40 + 60 + 60, 15 + 40 + 100,
                                                                      100 + 40 + 60 + 60 + 40, 15 + 40 + 40 + 100,
                                                                      width=3,
                                                                      fill="red", outline="black")
                         self.label_red_coin[coin_index_coin_number].place(x=100 + 40 + 60 + 60 + 10, y=15 + 40 + 100 + 5)
                     else:
-                        coin_recreate = self.make_canvas.create_oval(100 + 40, 15 + 40 + 100, 100 + 40 + 40,
+                        coin_recreate = self.canvas_game.create_oval(100 + 40, 15 + 40 + 100, 100 + 40 + 40,
                                                                      15 + 40 + 40 + 100, width=3, fill="red",
                                                                      outline="black")
                         self.label_red_coin[coin_index_coin_number].place(x=100 + 40 + 10, y=15 + 40 + 100 + 5)
@@ -999,39 +1000,39 @@ class Ludo:
                     self.graphical_red_coin[coin_index_coin_number] = coin_recreate
 
         if coin_color != "green":
-            for coin_index_coin_number in range(len(self.green_coord_list)):
-                if self.green_coord_list[coin_index_coin_number] == coin_position:
+            for coin_index_coin_number in range(len(self.dimensn_green_list)):
+                if self.dimensn_green_list[coin_index_coin_number] == coin_position:
                     if path_to_traverse_before_overlap == 6:
                         self.turn_after_six = 1
                     else:
-                        self.time_for -= 1
+                        self.clock_counter -= 1
 
-                    self.make_canvas.delete(self.graphical_green_coin[coin_index_coin_number])
+                    self.canvas_game.delete(self.graphical_green_coin[coin_index_coin_number])
                     self.label_green_coin[coin_index_coin_number].place_forget()
-                    self.green_coin_position[coin_index_coin_number] = -1
-                    self.green_coord_list[coin_index_coin_number] = -1
+                    self.green_player_pos[coin_index_coin_number] = -1
+                    self.dimensn_green_list[coin_index_coin_number] = -1
 
                     if coin_index_coin_number == 0:
-                        coin_recreate = self.make_canvas.create_oval(340 + (40 * 3) + 40, 15 + 40,
+                        coin_recreate = self.canvas_game.create_oval(340 + (40 * 3) + 40, 15 + 40,
                                                                      340 + (40 * 3) + 40 + 40, 15 + 40 + 40, width=3,
                                                                      fill="#00FF00", outline="black")
                         self.label_green_coin[coin_index_coin_number].place(x=340 + (40 * 3) + 40 + 10, y=15 + 40 + 5)
                     elif coin_index_coin_number == 1:
-                        coin_recreate = self.make_canvas.create_oval(340 + (40 * 3) + 40 + 60 + 40 + 20, 15 + 40,
+                        coin_recreate = self.canvas_game.create_oval(340 + (40 * 3) + 40 + 60 + 40 + 20, 15 + 40,
                                                                      340 + (40 * 3) + 40 + 60 + 40 + 40 + 20,
                                                                      15 + 40 + 40, width=3, fill="#00FF00",
                                                                      outline="black")
                         self.label_green_coin[coin_index_coin_number].place(x=340 + (40 * 3) + 40 + 40 + 60 + 30,
                                                                       y=15 + 40 + 5)
                     elif coin_index_coin_number == 2:
-                        coin_recreate = self.make_canvas.create_oval(340 + (40 * 3) + 40 + 60 + 40 + 20, 15 + 40 + 100,
+                        coin_recreate = self.canvas_game.create_oval(340 + (40 * 3) + 40 + 60 + 40 + 20, 15 + 40 + 100,
                                                                      340 + (40 * 3) + 40 + 60 + 40 + 40 + 20,
                                                                      15 + 40 + 40 + 100, width=3, fill="#00FF00",
                                                                      outline="black")
                         self.label_green_coin[coin_index_coin_number].place(x=340 + (40 * 3) + 40 + 40 + 60 + 30,
                                                                       y=15 + 40 + 100 + 5)
                     else:
-                        coin_recreate = self.make_canvas.create_oval(340 + (40 * 3) + 40, 15 + 40 + 100,
+                        coin_recreate = self.canvas_game.create_oval(340 + (40 * 3) + 40, 15 + 40 + 100,
                                                                      340 + (40 * 3) + 40 + 40, 15 + 40 + 40 + 100,
                                                                      width=3, fill="#00FF00", outline="black")
                         self.label_green_coin[coin_index_coin_number].place(x=340 + (40 * 3) + 40 + 10, y=15 + 40 + 100 + 5)
@@ -1039,33 +1040,33 @@ class Ludo:
                     self.graphical_green_coin[coin_index_coin_number] = coin_recreate
 
         if coin_color != "yellow":
-            for coin_index_coin_number in range(len(self.yellow_coord_list)):
-                if self.yellow_coord_list[coin_index_coin_number] == coin_position:
+            for coin_index_coin_number in range(len(self.dimensn_yellow_list)):
+                if self.dimensn_yellow_list[coin_index_coin_number] == coin_position:
                     if path_to_traverse_before_overlap == 6:
                         self.turn_after_six = 1
                     else:
-                        self.time_for -= 1
+                        self.clock_counter -= 1
 
-                    self.make_canvas.delete(self.graphical_yellow_coin[coin_index_coin_number])
+                    self.canvas_game.delete(self.graphical_yellow_coin[coin_index_coin_number])
                     self.label_yellow_coin[coin_index_coin_number].place_forget()
-                    self.yellow_coin_position[coin_index_coin_number] = -1
-                    self.yellow_coord_list[coin_index_coin_number] = -1
+                    self.yellow_player_pos[coin_index_coin_number] = -1
+                    self.dimensn_yellow_list[coin_index_coin_number] = -1
 
                     if coin_index_coin_number == 0:
-                        coin_recreate = self.make_canvas.create_oval(340 + (40 * 3) + 40, 340 + 80 + 15,
+                        coin_recreate = self.canvas_game.create_oval(340 + (40 * 3) + 40, 340 + 80 + 15,
                                                                      340 + (40 * 3) + 40 + 40, 340 + 80 + 40 + 15,
                                                                      width=3, fill="yellow", outline="black")
                         self.label_yellow_coin[coin_index_coin_number].place(x=340 + (40 * 3) + 40 + 10,
                                                                        y=30 + (40 * 6) + (40 * 3) + 40 + 10)
                     elif coin_index_coin_number == 1:
-                        coin_recreate = self.make_canvas.create_oval(340 + (40 * 3) + 40 + 60 + 40 + 20, 340 + 80 + 15,
+                        coin_recreate = self.canvas_game.create_oval(340 + (40 * 3) + 40 + 60 + 40 + 20, 340 + 80 + 15,
                                                                      340 + (40 * 3) + 40 + 60 + 40 + 40 + 20,
                                                                      340 + 80 + 40 + 15, width=3, fill="yellow",
                                                                      outline="black")
                         self.label_yellow_coin[coin_index_coin_number].place(x=340 + (40 * 3) + 40 + 40 + 60 + 30,
                                                                        y=30 + (40 * 6) + (40 * 3) + 40 + 10)
                     elif coin_index_coin_number == 2:
-                        coin_recreate = self.make_canvas.create_oval(340 + (40 * 3) + 40 + 60 + 40 + 20,
+                        coin_recreate = self.canvas_game.create_oval(340 + (40 * 3) + 40 + 60 + 40 + 20,
                                                                      340 + 80 + 60 + 40 + 15,
                                                                      340 + (40 * 3) + 40 + 60 + 40 + 40 + 20,
                                                                      340 + 80 + 60 + 40 + 40 + 15, width=3,
@@ -1074,7 +1075,7 @@ class Ludo:
                         self.label_yellow_coin[coin_index_coin_number].place(x=340 + (40 * 3) + 40 + 40 + 60 + 30,
                                                                        y=30 + (40 * 6) + (40 * 3) + 40 + 100 + 10)
                     else:
-                        coin_recreate = self.make_canvas.create_oval(340 + (40 * 3) + 40, 340 + 80 + 60 + 40 + 15,
+                        coin_recreate = self.canvas_game.create_oval(340 + (40 * 3) + 40, 340 + 80 + 60 + 40 + 15,
                                                                      340 + (40 * 3) + 40 + 40,
                                                                      340 + 80 + 60 + 40 + 40 + 15, width=3,
                                                                      fill="yellow",
@@ -1085,32 +1086,32 @@ class Ludo:
                     self.graphical_yellow_coin[coin_index_coin_number] = coin_recreate
 
         if coin_color != "blue":
-            for coin_index_coin_number in range(len(self.blue_coord_list)):
-                if self.blue_coord_list[coin_index_coin_number] == coin_position:
+            for coin_index_coin_number in range(len(self.dimensn_blue_list)):
+                if self.dimensn_blue_list[coin_index_coin_number] == coin_position:
                     if path_to_traverse_before_overlap == 6:
                         self.turn_after_six = 1
                     else:
-                        self.time_for -= 1
+                        self.clock_counter -= 1
 
-                    self.make_canvas.delete(self.graphical_blue_coin[coin_index_coin_number])
+                    self.canvas_game.delete(self.graphical_blue_coin[coin_index_coin_number])
                     self.label_blue_coin[coin_index_coin_number].place_forget()
-                    self.blue_coin_position[coin_index_coin_number] = -1
-                    self.blue_coord_list[coin_index_coin_number] = -1
+                    self.blue_player_pos[coin_index_coin_number] = -1
+                    self.dimensn_blue_list[coin_index_coin_number] = -1
 
                     if coin_index_coin_number == 0:
-                        coin_recreate = self.make_canvas.create_oval(100 + 40, 340 + 80 + 15, 100 + 40 + 40,
+                        coin_recreate = self.canvas_game.create_oval(100 + 40, 340 + 80 + 15, 100 + 40 + 40,
                                                                      340 + 80 + 40 + 15, width=3, fill="#04d9ff",
                                                                      outline="black")
                         self.label_blue_coin[coin_index_coin_number].place(x=100 + 40 + 10,
                                                                      y=30 + (40 * 6) + (40 * 3) + 40 + 10)
                     elif coin_index_coin_number == 1:
-                        coin_recreate = self.make_canvas.create_oval(100 + 40 + 60 + 40 + 20, 340 + 80 + 15,
+                        coin_recreate = self.canvas_game.create_oval(100 + 40 + 60 + 40 + 20, 340 + 80 + 15,
                                                                      100 + 40 + 60 + 40 + 40 + 20, 340 + 80 + 40 + 15,
                                                                      width=3, fill="#04d9ff", outline="black")
                         self.label_blue_coin[coin_index_coin_number].place(x=100 + 40 + 60 + 60 + 10,
                                                                      y=30 + (40 * 6) + (40 * 3) + 40 + 10)
                     elif coin_index_coin_number == 2:
-                        coin_recreate = self.make_canvas.create_oval(100 + 40 + 60 + 40 + 20, 340 + 80 + 60 + 40 + 15,
+                        coin_recreate = self.canvas_game.create_oval(100 + 40 + 60 + 40 + 20, 340 + 80 + 60 + 40 + 15,
                                                                      100 + 40 + 60 + 40 + 40 + 20,
                                                                      340 + 80 + 60 + 40 + 40 + 15, width=3,
                                                                      fill="#04d9ff", outline="black")
@@ -1118,7 +1119,7 @@ class Ludo:
                                                                      y=30 + (40 * 6) + (
                                                                              40 * 3) + 40 + 60 + 40 + 10)
                     else:
-                        coin_recreate = self.make_canvas.create_oval(100 + 40, 340 + 80 + 60 + 40 + 15, 100 + 40 + 40,
+                        coin_recreate = self.canvas_game.create_oval(100 + 40, 340 + 80 + 60 + 40 + 15, 100 + 40 + 40,
                                                                      340 + 80 + 60 + 40 + 40 + 15, width=3,
                                                                      fill="#04d9ff", outline="black")
                         self.label_blue_coin[coin_index_coin_number].place(x=100 + 40 + 10, y=30 + (40 * 6) + (
@@ -1130,16 +1131,16 @@ class Ludo:
     def check_winner_and_runner(self, color_coin):
         coins_home = 0  # Check for all specific color coins
         if color_coin == "red":
-            coins_list = self.red_coord_list
+            coins_list = self.dimensn_red_list
             index_pos = 0  # Player index
         elif color_coin == "green":
-            coins_list = self.green_coord_list
+            coins_list = self.dimensn_green_list
             index_pos = 3  # Player index
         elif color_coin == "yellow":
-            coins_list = self.yellow_coord_list
+            coins_list = self.dimensn_yellow_list
             index_pos = 2  # Player index
         else:
-            coins_list = self.blue_coord_list
+            coins_list = self.dimensn_blue_list
             index_pos = 1  # Player index
 
         for coin_index in coins_list:
@@ -1181,17 +1182,17 @@ class Ludo:
                 self.roll_predict_coins[0][1]['state'] = DISABLED
                 return False
             else:
-                self.time_for -= 1
+                self.clock_counter -= 1
         else:
             print("No Winner")
 
         return True
 
-    def bot_operations(self, ind="give"):
+    def bot_operations(self, ind ="give"):
         if ind == "give":
             coins_inside = 1
             for i in range(4):
-                if self.red_coin_position[i] == -1:
+                if self.red_player_pos[i] == -1:
                     coins_inside = 1
                 else:
                     coins_inside = 0
@@ -1205,8 +1206,8 @@ class Ludo:
                 else:
                     pass
             else:
-                crnt_val = self.red_coin_position
-                coin_index_ref = self.blue_coin_position
+                crnt_val = self.red_player_pos
+                coin_index_ref = self.blue_player_pos
 
                 if len(self.robo_bot_coins) == 1:
                     if self.red_coin_tracker < 6:
@@ -1368,12 +1369,12 @@ class Ludo:
                         coin_proceed = 0
 
                         for coin in self.robo_bot_coins:
-                            if crnt_val[coin - 1] + self.red_coin_tracker in self.blue_coin_position:
+                            if crnt_val[coin - 1] + self.red_coin_tracker in self.blue_player_pos:
                                 coin_proceed = coin
                                 break
 
                         if not coin_proceed:
-                            if -1 in self.red_coin_position:
+                            if -1 in self.red_player_pos:
                                 coins_list = [1, 2, 3, 4]
                                 for coin in self.robo_bot_coins:
                                     coins_list.remove(coin)
